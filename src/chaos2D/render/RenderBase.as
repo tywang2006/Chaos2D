@@ -22,11 +22,6 @@ package chaos2D.render
 			ChaosEngine.instance.removeEventListener(Event.INIT, onContextCreated);
 		}
 		
-		public function render():void
-		{
-			
-		}
-		
 		protected function registerPrograms():void
 		{
 			throw "RenderBase: the program is not existing";

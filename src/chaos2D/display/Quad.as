@@ -24,10 +24,10 @@ package chaos2D.display
 		
 		override public function render():void 
 		{
-			if (_render == null)_render = new QuadRender();;
-			var context:Context2D = ChaosEngine.context;
-			context.setProgram(QuadRender.QUAD_PROGRAM_NAME);
-			context.setColorConstant(_color);
+			if (_render == null)_render = new QuadRender();
+			ChaosEngine.context.setProgram(QuadRender.QUAD_PROGRAM_NAME);
+			ChaosEngine.context.setAlphaBlend();
+			ChaosEngine.context.setColorConstant(_color);
 			super.render();
 		}
 		

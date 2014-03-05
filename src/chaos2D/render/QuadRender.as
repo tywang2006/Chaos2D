@@ -20,6 +20,7 @@ package chaos2D.render
 		
 		override protected function onContextCreated(e:Event = null):void 
 		{
+			super.onContextCreated(e);
 			registerPrograms();
 		}
 		

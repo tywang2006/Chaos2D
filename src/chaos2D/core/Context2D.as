@@ -1,10 +1,14 @@
 package chaos2D.core 
 {
+	import chaos2D.texture.BitmapTexture;
 	import flash.accessibility.ISearchableText;
+	import flash.display.Bitmap;
+	import flash.display.BitmapData;
 	import flash.display3D.Context3D;
 	import flash.display3D.Context3DBlendFactor;
 	import flash.display3D.Context3DCompareMode;
 	import flash.display3D.Context3DProgramType;
+	import flash.display3D.Context3DTextureFormat;
 	import flash.display3D.Context3DTriangleFace;
 	import flash.display3D.Context3DVertexBufferFormat;
 	import flash.display3D.IndexBuffer3D;
@@ -164,6 +168,18 @@ package chaos2D.core
 		public function get projectMatrix():Matrix3D 
 		{
 			return _projectMatrix;
+		}
+		
+		public function createTexture(data:*,mipMapping:Boolean):chaos2D.texture.Texture
+		{
+			var base:Texture;
+			var ret:chaos2D.texture.Texture;
+			if(data is BitmapData || data is Bitmap)
+			{
+				base = _context3D.createTexture(data.width,data.height,Context3DTextureFormat.BGRA,false);
+				ret = new BitmapTexture(base,data,mipMapping);
+			}
+			return ret;
 		}
 		
 	}

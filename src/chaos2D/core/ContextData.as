@@ -32,6 +32,7 @@ package chaos2D.core
 			setUV(1, 1, 0);
 			setUV(2, 1, 1);
 			setUV(3, 0, 1);
+			
 		}
 		
 		private function setPosition(index:uint, xcoord:Number, ycoord:Number):void

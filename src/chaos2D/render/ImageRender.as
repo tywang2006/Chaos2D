@@ -1,27 +1,37 @@
 package chaos2D.render 
 {
+	import chaos2D.ChaosEngine;
 	import chaos2D.texture.Texture;
 	import com.adobe.utils.AGALMiniAssembler;
+	import flash.display3D.Context3DProgramType;
 	import flash.display3D.Context3DTextureFormat;
+	import flash.events.Event;
+	import flash.utils.Dictionary;
 	/**
 	 * ...
 	 * @author Chao
 	 */
 	public class ImageRender extends RenderBase 
 	{
+		private static var _programNameCache:Dictionary;
 		
 		public function ImageRender() 
 		{
+			_programNameCache = new Dictionary();
 			super();
-			
+		}
+		
+		override protected function onContextCreated(e:Event = null):void 
+		{
+			super.onContextCreated(e);
+			registerPrograms();
 		}
 		
 		override protected function registerPrograms():void 
 		{
 			var vertexSrc:String = "m44 op,va0,vc0 \n" +
-								   "mov v0,va1 \n" +
-				                   "mov v1,va2";
-			var fragmentSrc:String = "tex ft0,v1,fs0 <???> \n" +
+								   "mov v0,va2";
+			var fragmentSrc:String = "tex ft0,v0,fs0 <???> \n" +
 									 "mov oc,ft0";
 			
 			var tinted:Boolean = false;
@@ -62,6 +72,7 @@ package chaos2D.render
 								options.push("linear", mipmap ? "miplinear" : "mipnone");
 							
 							fragmentAssembler.assemble(Context3DProgramType.FRAGMENT, fragmentSrc.replace("???", options.join()));
+							trace(fragmentSrc.replace("???", options.join()))
 							ChaosEngine.context.registerProgram(
 								generateProgramName(tinted, mipmap, repeat, format, smoothing),
 								vertexAssembler.agalcode, fragmentAssembler.agalcode);
@@ -71,7 +82,7 @@ package chaos2D.render
 			}
 		}
 		
-		private static function generateProgramName(tinted:Boolean, mipMap:Boolean=true, 
+		public function generateProgramName(tinted:Boolean, mipMap:Boolean=true, 
 													repeat:Boolean=false, format:String="bgra",
 													smoothing:String="bilinear"):String
 		{

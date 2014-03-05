@@ -19,6 +19,7 @@ package chaos2D
 		private var _stage3D:Stage3D;
 		private var _context:Context2D;
 		private var _root:DisplayObjectContainer;
+		private var _rootClass:Class;
 		private static var _instance:ChaosEngine;
 		
 		public function ChaosEngine(stage:Stage, stage3D:Stage3D, rootClass:Class) 
@@ -27,7 +28,7 @@ package chaos2D
 			_stage = stage;
 			_stage3D = stage3D;
 			_instance = this;
-			_root = new rootClass();
+			_rootClass = rootClass;
 			requestContext2D();
 		}
 		
@@ -44,6 +45,8 @@ package chaos2D
 			_context = new Context2D(_stage3D.context3D);
 			_context.setProjection(_stage.stageWidth, _stage.stageHeight);
 			_stage.addEventListener(Event.ENTER_FRAME, onEnterFrame);
+			
+			_root = new _rootClass();
 			
 			dispatchEvent(new Event(Event.INIT));
 		}
