@@ -23,7 +23,7 @@ package chaos2D.display
 				_width = texture.width;
 				_height = texture.height;
 				_isDirty = true;
-				_texture.uploadData();
+				//_texture.uploadData();
 			} else {
 				throw ArgumentError("Image: texture can't be NULL!");
 			}

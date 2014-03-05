@@ -17,7 +17,7 @@ package chaos2D.render
 		
 		public function ImageRender() 
 		{
-			_programNameCache = new Dictionary();
+			
 			super();
 		}
 		
@@ -29,6 +29,9 @@ package chaos2D.render
 		
 		override protected function registerPrograms():void 
 		{
+			if (_programNameCache) return;
+			_programNameCache = new Dictionary();
+			
 			var vertexSrc:String = "m44 op,va0,vc0 \n" +
 								   "mov v0,va2";
 			var fragmentSrc:String = "tex ft0,v0,fs0 <???> \n" +
@@ -72,7 +75,6 @@ package chaos2D.render
 								options.push("linear", mipmap ? "miplinear" : "mipnone");
 							
 							fragmentAssembler.assemble(Context3DProgramType.FRAGMENT, fragmentSrc.replace("???", options.join()));
-							trace(fragmentSrc.replace("???", options.join()))
 							ChaosEngine.context.registerProgram(
 								generateProgramName(tinted, mipmap, repeat, format, smoothing),
 								vertexAssembler.agalcode, fragmentAssembler.agalcode);

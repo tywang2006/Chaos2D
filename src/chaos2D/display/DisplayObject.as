@@ -36,7 +36,7 @@ package chaos2D.display
 			_alpha = 1;
 			_visible = true;
 			_matrix3D = new Matrix3D();
-			_registerPoint = new Point(0.5, 0.5);
+			_registerPoint = new Point(0.5, 0.5);// factor
 		}
 		
 		public function setParent(parent:DisplayObjectContainer):void
