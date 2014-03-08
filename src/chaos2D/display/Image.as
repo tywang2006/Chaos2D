@@ -42,6 +42,16 @@ package chaos2D.display
 			super.render();
 		}
 		
+		public function set texture(value:Texture):void 
+		{
+			_texture = value;
+		}
+		
+		public function get texture():Texture 
+		{
+			return _texture;
+		}
+		
 	}
 
 }

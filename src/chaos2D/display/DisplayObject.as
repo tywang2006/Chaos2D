@@ -36,7 +36,7 @@ package chaos2D.display
 			_alpha = 1;
 			_visible = true;
 			_matrix3D = new Matrix3D();
-			_registerPoint = new Point(0.5, 0.5);// factor
+			_registerPoint = new Point(0, 0);// factor
 		}
 		
 		public function setParent(parent:DisplayObjectContainer):void
@@ -187,6 +187,11 @@ package chaos2D.display
 			if (value == _rotation) return;
 			_rotation = value;
 			_isDirty = true;
+		}
+		
+		public function set registerPoint(value:Point):void 
+		{
+			_registerPoint = value;
 		}
 		
 	}

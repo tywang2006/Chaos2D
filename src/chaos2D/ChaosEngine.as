@@ -45,10 +45,9 @@ package chaos2D
 			_context = new Context2D(_stage3D.context3D);
 			_context.setProjection(_stage.stageWidth, _stage.stageHeight);
 			_stage.addEventListener(Event.ENTER_FRAME, onEnterFrame);
+			dispatchEvent(new Event(Event.INIT));
 			
 			_root = new _rootClass();
-			
-			dispatchEvent(new Event(Event.INIT));
 		}
 		
 		private function onEnterFrame(e:Event):void 
