@@ -4,6 +4,7 @@ package chaos2D.util.data
 	import flash.display.BitmapData;
 	import flash.display.MovieClip;
 	import flash.geom.Matrix;
+	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.utils.getQualifiedSuperclassName;
 	/**
@@ -44,6 +45,52 @@ package chaos2D.util.data
 		public static function getAnim(linkage:String):Vector.<FrameDataObject>
 		{
 			return anims[linkage];
+		}
+		
+		private static function buildSpriteSheet(mc:MovieClip, linkage:String):void
+		{
+			if (anims[linkage]) {
+				throw "linkage has been added into animation, please change linkage in swf";
+			}
+			anims[linkage] = new Vector.<FrameDataObject>(numFrames, true);
+			var frameData:FrameDataObject;
+			
+			var numFrames:int = mc.totalFrames;
+			var numUnits:int = 1;
+			var unitWidth:Number = mc.rect.width;
+			var unitHeight:Number = mc.rect.height;
+			while (numUnits * numUnits < numFrames) numUnits++;
+			var textureWidth:Number = numUnits * unitWidth;
+			var textureHeight:Number = numUnits * unitHeight;
+			var textureSize:Number = Math.pow(2, Math.ceil(Math.log(Math.max(textureWidth, textureHeight)) / Math.LN2));
+			var bitmapData:BitmapData = new BitmapData(textureSize, textureHeight);
+			var signalBitmapData:BitmapData;
+			var i:int;
+			var j:int;
+			var frameIndex:int;
+			var matrix:Matrix = new Matrix();
+			var bound:Rectangle;
+			for (i = 0; i < numUnits; i++) {
+				for (j = 0; j < numUnits; j++) {
+					frameIndex = i * numUnits + j;
+					if (frameIndex >= numFrames) break;
+					mc.gotoAndStop(frameIndex);
+					bound = mc.rect.getBounds(mc);
+					signalBitmapData = new BitmapData(unitWidth, unitHeight)
+					matrix.identity();
+					matrix.translate( -bound.x, -bound.y);
+					signalBitmapData.draw(mc, matrix, null, null, null, true);
+					bitmapData.copyPixels(signalBitmapData, new Rectangle(0, 0, unitWidth, unitHeight), new Point(i * unitWidth, j * unitHeight));
+					
+					frameData = new FrameDataObject();
+					frameData.label = mc.currentLabel;
+					frameData.width = unitWidth;
+					frameData.height = unitHeight;
+					frameData.linkage = linkage;
+					anims[linkage][i] = frameData;
+				}
+			}
+			TextureCenter.instance.addBitmapData(linkage, bitmapData);
 		}
 		
 		private static function cacheAnim(mc:MovieClip, linkage:String):void

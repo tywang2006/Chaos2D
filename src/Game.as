@@ -59,7 +59,7 @@ package
 				ds.push(Math.random())
 			}
 			*/
-			for (var i:int = 0; i < 200; i++)
+			for (var i:int = 0; i < 300; i++)
 			{
 				var sprite:Sprite = new Sprite("Man");
 				addChild(sprite);
@@ -69,6 +69,7 @@ package
 				sprites.push(sprite);
 				vs.push((Math.random() - 0.5) * 100);
 				ds.push(Math.random())
+				sprite.scaleX = sprite.scaleY = 0.5;
 			}
 		}
 		
