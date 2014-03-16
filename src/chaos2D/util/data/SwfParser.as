@@ -1,5 +1,7 @@
 package chaos2D.util.data 
 {
+	import chaos2D.ChaosEngine;
+	import chaos2D.texture.Texture;
 	import chaos2D.texture.TextureCenter;
 	import chaos2D.util.data.layout.SpriteSheetPacker;
 	import flash.display.Bitmap;
@@ -105,7 +107,14 @@ package chaos2D.util.data
 				anims[linkage][i].bitmapData.dispose();
 			}
 			
-			TextureCenter.instance.addBitmapData(linkage, baseBitmapData);
+			var texture:Texture = TextureCenter.instance.addBitmapData(linkage, baseBitmapData);
+			
+			for (i = 0; i < anims[linkage].length; i++) {
+				anims[linkage][i].uvBuffer = ChaosEngine.context.getVertexBufferByUV(anims[linkage][i].uv, texture.base);
+			}
+			
+			//show 2 power sprite sheet
+			//ChaosEngine.instance.stage.addChild(new Bitmap(baseBitmapData));
 
 		}
 		

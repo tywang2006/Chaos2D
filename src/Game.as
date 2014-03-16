@@ -38,13 +38,14 @@ package
 		{
 			super();
 			
-			for (var i:int = 0; i < 10; i++)
+			for (var i:int = 0; i < 1500; i++)
 			{
 				var sprite:Sprite = new Sprite("square");
 				addChild(sprite);
 				sprite.x = 1200 * Math.random();
 				sprite.y = 600 * Math.random();
 				sprite.registerPoint = new Point(0.5, 0.5);
+				sprite.scaleX = sprite.scaleY = Math.random();
 				sprites.push(sprite);
 				vs.push((Math.random() - 0.5) * 100);
 				ds.push(Math.random())

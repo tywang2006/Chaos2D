@@ -90,16 +90,21 @@ package chaos2D.core
 			
 		}
 		
+		public function getVertexBufferByUV(uv:Vector.<Number>, texture:flash.display3D.textures.Texture):VertexBuffer3D
+		{
+			var vertexBuffer:VertexBuffer3D = _context3D.createVertexBuffer(4, 2);
+			vertexBuffer.uploadFromVector(uv, 0, 4);
+			return vertexBuffer;
+		}
+		
 		public function setVertexBufferForTexture(texture:flash.display3D.textures.Texture):void
 		{
 			_context3D.setTextureAt(0, texture);
 			_context3D.setVertexBufferAt(2, _vertexUVBuffer, 0, Context3DVertexBufferFormat.FLOAT_2);
 		}
 		
-		public function setCustomizeVertexBufferForTexture(uv:Vector.<Number>, texture:flash.display3D.textures.Texture):void
+		public function setCustomizeVertexBufferForTexture(vertexBuffer:VertexBuffer3D, texture:flash.display3D.textures.Texture):void
 		{
-			var vertexBuffer:VertexBuffer3D = _context3D.createVertexBuffer(4, 2);
-			vertexBuffer.uploadFromVector(uv, 0, 4);
 			_context3D.setTextureAt(0, texture);
 			_context3D.setVertexBufferAt(2, vertexBuffer, 0, Context3DVertexBufferFormat.FLOAT_2);
 		}

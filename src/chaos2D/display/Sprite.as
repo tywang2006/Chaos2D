@@ -70,9 +70,8 @@ package chaos2D.display
 			_image.height = _currentFrameData.height;
 			_image.x = _currentFrameData.offsetX;
 			_image.y = _currentFrameData.offsetY;
-			//updateWidthHeight();
 			ChaosEngine.context.setMatrix3D(this.matrix3D);
-			ChaosEngine.context.setCustomizeVertexBufferForTexture(_currentFrameData.uv, _texture.base);
+			ChaosEngine.context.setCustomizeVertexBufferForTexture(_currentFrameData.uvBuffer, _texture.base);
 
 			var i:int;
 			for (i = 0; i < _numChildren; i++) {

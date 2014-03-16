@@ -3,6 +3,7 @@ package chaos2D.util.data
 	import chaos2D.texture.BitmapTexture;
 	import chaos2D.texture.Texture;
 	import flash.display.BitmapData;
+	import flash.display3D.VertexBuffer3D;
 	/**
 	 * ...
 	 * @author Chao
@@ -22,6 +23,7 @@ package chaos2D.util.data
 		public var bitmapData:BitmapData;
 		public var fit:Object;
 		public var uv:Vector.<Number>;
+		public var uvBuffer:VertexBuffer3D;
 		
 		public function FrameDataObject() 
 		{
