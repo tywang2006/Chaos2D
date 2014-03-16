@@ -71,8 +71,6 @@ package
 					vs[i] = -vs[i];
 				}
 			}
-			
-
 
 		}
 		
