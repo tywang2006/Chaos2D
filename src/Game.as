@@ -38,27 +38,6 @@ package
 		{
 			super();
 			/*
-			TextureCenter.instance.addBitmap("flower", new Flower2());
-			TextureCenter.instance.addBitmap("bird", new Bird());
-
-			var tex1:Texture = TextureCenter.instance.getTextureByID("flower");
-			var tex2:Texture = TextureCenter.instance.getTextureByID("bird");
-			for (var i:int = 0; i < 1000; i++)
-			{
-				if (Math.random() < 0.4) {
-					image = new Image(tex1);
-				} else {
-					image = new Image(tex2);
-				}
-				
-				addChild(image);
-				image.x = Math.random() * 1200;
-				image.y = Math.random() * 600;
-				images.push(image);
-				vs.push((Math.random() - 0.5) * 100);
-				ds.push(Math.random())
-			}
-			*/
 			for (var i:int = 0; i < 300; i++)
 			{
 				var sprite:Sprite = new Sprite("Man");
@@ -71,12 +50,13 @@ package
 				ds.push(Math.random())
 				sprite.scaleX = sprite.scaleY = 0.5;
 			}
+			*/
 		}
 		
 		override public function render():void 
 		{
 			super.render();
-			
+			/*
 			for (var i:int = 0; i < sprites.length; i++) {
 				direct = Math.random();
 				if (direct > 0.4) {
@@ -91,24 +71,8 @@ package
 					vs[i] = -vs[i];
 				}
 			}
-			
-			/*
-			for (var i:int = 0; i < images.length; i++) {
-				
-				direct = Math.random();
-				if (direct > 0.4) {
-					images[i].x += vs[i];
-					images[i].rotation++;
-				} else {
-					images[i].y += vs[i];
-					images[i].rotation--;
-				}
-				if (images[i].x > 1200 || images[i].x < 0 || images[i].y<0 || images[i].y>600) 
-				{
-					vs[i] = -vs[i];
-				}
-			}
 			*/
+
 
 		}
 		

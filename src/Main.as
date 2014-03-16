@@ -7,6 +7,7 @@ package
 	import flash.display.Loader;
 	import flash.display.MovieClip;
 	import flash.display.Sprite;
+	import flash.display.Stage;
 	import flash.events.Event;
 	/**
 	 * ...
@@ -20,6 +21,7 @@ package
 		
 		private var _engine:ChaosEngine;
 		private var _loader:Loader;
+		public static var SS:Stage
 		
 		public function Main():void 
 		{
@@ -29,7 +31,7 @@ package
 		
 		private function init(e:Event = null):void 
 		{
-			addChild(new Stats());
+			//addChild(new Stats());
 			removeEventListener(Event.ADDED_TO_STAGE, init);
 			
 			_loader = new Loader();
@@ -46,14 +48,20 @@ package
 		private function startGame():void
 		{
 			// entry point
-			_engine = new ChaosEngine(stage, stage.stage3Ds[0], Game);
-			_engine.addEventListener(Event.INIT, onCompleteStage3D);
+			//_engine = new ChaosEngine(stage, stage.stage3Ds[0], Game);
+			//_engine.addEventListener(Event.INIT, onCompleteStage3D);
+			
+			SS = stage
+			SwfParser.addAsset(MovieClip(_loader.contentLoaderInfo.content));
+			addChild(SwfParser.shape);
 			
 		}
 		
 		private function onCompleteStage3D(e:Event):void 
 		{
-			SwfParser.addAsset(MovieClip(_loader.contentLoaderInfo.content));
+			//SS = stage
+			//SwfParser.addAsset(MovieClip(_loader.contentLoaderInfo.content));
+			//addChild(SwfParser.shape);
 		}
 		
 	}

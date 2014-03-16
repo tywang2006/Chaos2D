@@ -16,8 +16,11 @@ package chaos2D.util.data
 		public var offsetY:Number = 0;
 		public var width:Number;
 		public var height:Number;
+		public var rawWidth:Number;
+		public var rawHeight:Number;
 		public var linkage:String;
 		public var bitmapData:BitmapData;
+		public var fit:Object;
 		
 		public function FrameDataObject() 
 		{
