@@ -17,9 +17,7 @@ package chaos2D.util.data
 	public class SwfParser 
 	{
 		private static var anims:Object = new Object();
-		public static var testData:BitmapData;
 		
-		public static var shape:Shape = new Shape();
 		
 		public static function addAsset(asset:MovieClip):void
 		{
@@ -35,7 +33,6 @@ package chaos2D.util.data
 				ClassReference = asset.loaderInfo.applicationDomain.getDefinition(linkages[i]) as Class;
 				if (getQualifiedSuperclassName(ClassReference)=="flash.display::MovieClip") {
 					mc = new ClassReference() as MovieClip;
-					//cacheAnim(mc, linkages[i]);
 					buildSpriteSheet(mc, linkages[i]);
 				}
 				
@@ -92,18 +89,24 @@ package chaos2D.util.data
 			
 			spritePacker = new SpriteSheetPacker();
 			spritePacker.fit(anims[linkage]);
+			var maxValue:Number = Math.pow(2, Math.ceil(Math.log(Math.max(spritePacker.maxHeight, spritePacker.maxHeight)) / Math.LN2));
+			baseBitmapData = new BitmapData(maxValue, maxValue, true, 0x0);
+			
 			
 			for (i = 0; i < anims[linkage].length; i++) {
-				var b:Bitmap = new Bitmap(anims[linkage][i].bitmapData, "auto", true);
-				b.x = anims[linkage][i].fit.x;
-				b.y = anims[linkage][i].fit.y;
-				Main.SS.addChild(b);
+				frameData = anims[linkage][i];
+				frameData.uv = Vector.<Number>([
+													frameData.fit.x/maxValue, frameData.fit.y/maxValue,
+													(frameData.fit.x + frameData.width)/maxValue, frameData.fit.y/maxValue,
+													(frameData.fit.x + frameData.width)/maxValue, (frameData.fit.y + frameData.height)/maxValue,
+													frameData.fit.x/maxValue, (frameData.fit.y + frameData.height)/maxValue
+											  ]);
+				baseBitmapData.copyPixels(frameData.bitmapData, frameData.bitmapData.rect, new Point(frameData.fit.x, frameData.fit.y));
+				anims[linkage][i].bitmapData.dispose();
 			}
 			
-			
-			//var textureSize:Number = Math.pow(2, Math.ceil(Math.log(Math.max(textureWidth, textureHeight)) / Math.LN2));
-			//var bitmapData:BitmapData = new BitmapData(textureSize, textureHeight);
-			//TextureCenter.instance.addBitmapData(linkage, bitmapData);
+			TextureCenter.instance.addBitmapData(linkage, baseBitmapData);
+
 		}
 		
 		private static function cacheAnim(mc:MovieClip, linkage:String):void
@@ -141,7 +144,6 @@ package chaos2D.util.data
 				frameData.width = mc.width;
 				frameData.height = mc.height;
 				anims[linkage][i] = frameData;
-				testData = bitmapData;
 			
 			}
 		}	

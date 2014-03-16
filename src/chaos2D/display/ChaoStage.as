@@ -15,7 +15,7 @@ package chaos2D.display
 			super();
 		}
 		
-		override public function render():void 
+		override public function render(valid:Boolean = false):void 
 		{
 			super.render();
 		}

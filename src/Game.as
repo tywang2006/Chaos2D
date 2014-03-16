@@ -37,10 +37,10 @@ package
 		public function Game() 
 		{
 			super();
-			/*
-			for (var i:int = 0; i < 300; i++)
+			
+			for (var i:int = 0; i < 10; i++)
 			{
-				var sprite:Sprite = new Sprite("Man");
+				var sprite:Sprite = new Sprite("square");
 				addChild(sprite);
 				sprite.x = 1200 * Math.random();
 				sprite.y = 600 * Math.random();
@@ -48,15 +48,14 @@ package
 				sprites.push(sprite);
 				vs.push((Math.random() - 0.5) * 100);
 				ds.push(Math.random())
-				sprite.scaleX = sprite.scaleY = 0.5;
 			}
-			*/
+			
 		}
 		
-		override public function render():void 
+		override public function render(valid:Boolean = false):void 
 		{
 			super.render();
-			/*
+			
 			for (var i:int = 0; i < sprites.length; i++) {
 				direct = Math.random();
 				if (direct > 0.4) {
@@ -71,7 +70,7 @@ package
 					vs[i] = -vs[i];
 				}
 			}
-			*/
+			
 
 
 		}

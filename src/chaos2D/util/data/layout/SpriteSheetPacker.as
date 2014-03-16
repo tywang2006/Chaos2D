@@ -22,10 +22,12 @@ package chaos2D.util.data.layout
 			
 			//a,h,w
 			//blocks.sort(function(a:FrameDataObject, b:FrameDataObject):Boolean { return Boolean(b.width * b.height - a.width * a.height); } )
+			/*
 			blocks.sort(function(a:FrameDataObject, b:FrameDataObject):Boolean { return Boolean(Math.max(b.width, b.height) - Math.max(a.width, a.height)); })
 			blocks.sort(function(a:FrameDataObject, b:FrameDataObject):Boolean { return Boolean(Math.min(b.width, b.height) - Math.min(a.width, a.height)); })
 			blocks.sort(function(a:FrameDataObject, b:FrameDataObject):Boolean { return Boolean(b.height - a.height); } );
 			blocks.sort(function(a:FrameDataObject, b:FrameDataObject):Boolean { return Boolean(b.width - a.width); } );
+			*/
 			
 			maxWidth = maxHeight = 0;
 			

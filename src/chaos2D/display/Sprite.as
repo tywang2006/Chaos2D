@@ -4,6 +4,7 @@ package chaos2D.display
 	import chaos2D.render.ImageRender;
 	import chaos2D.render.RenderBase;
 	import chaos2D.texture.Texture;
+	import chaos2D.texture.TextureCenter;
 	import chaos2D.util.data.FrameDataObject;
 	import chaos2D.util.data.SwfParser;
 	import flash.geom.Matrix3D;
@@ -21,6 +22,7 @@ package chaos2D.display
 		private var _stopped:Boolean;
 		private var _totalFrames:int;
 		private var _image:Image;
+		private var _texture:Texture;
 		
 		public function Sprite(animName:String) 
 		{
@@ -29,11 +31,12 @@ package chaos2D.display
 			if (!_anim) {
 				throw ArgumentError("Image: anim can't be NULL!");
 			}
-			
+			_width = _height = 1;
+			_texture = TextureCenter.instance.getTextureByID(animName);
 			_currentFrame = 1;
 			_totalFrames = _anim.length;
 			_stopped = false;
-			_image = new Image(_anim[0].texture);
+			_image = new Image(_texture);
 			_isDirty = true;
 			addChild(_image);
 		}
@@ -59,19 +62,26 @@ package chaos2D.display
 			if (_currentFrame < 1)_currentFrame = 1;
 		}
 		
-		override public function render():void 
+		override public function render(valid:Boolean = false):void 
 		{
 			if (!_parent) return;
 			_currentFrameData = _anim[_currentFrame-1];
-			_image.texture = _currentFrameData.texture;
-			_image.width = _image.texture.width;
-			_image.height = _image.texture.height;
+			_image.width = _currentFrameData.width;
+			_image.height = _currentFrameData.height;
 			_image.x = _currentFrameData.offsetX;
 			_image.y = _currentFrameData.offsetY;
-			updateWidthHeight();
+			//updateWidthHeight();
 			ChaosEngine.context.setMatrix3D(this.matrix3D);
+			ChaosEngine.context.setCustomizeVertexBufferForTexture(_currentFrameData.uv, _texture.base);
 
-			super.render();
+			var i:int;
+			for (i = 0; i < _numChildren; i++) {
+				if (_image == _children[i]) {
+					_image.render(true);
+				} else {
+					_children[i].render();
+				}
+			}
 			
 			if (!_stopped) {
 				_currentFrame++;

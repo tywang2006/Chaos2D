@@ -30,7 +30,7 @@ package chaos2D.display
 			
 		}
 		
-		override public function render():void 
+		override public function render(ignoreTexture:Boolean = false):void 
 		{
 			if (_render == null) {
 				_render = new ImageRender();
@@ -38,7 +38,7 @@ package chaos2D.display
 			}
 			ChaosEngine.context.setProgram(_programName);
 			ChaosEngine.context.setAlphaBlend();
-			ChaosEngine.context.setVertexBufferForTexture(_texture.base);
+			if(!ignoreTexture) ChaosEngine.context.setVertexBufferForTexture(_texture.base);
 			super.render();
 		}
 		

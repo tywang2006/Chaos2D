@@ -22,7 +22,7 @@ package chaos2D.display
 			_isDirty = true;
 		}
 		
-		override public function render():void 
+		override public function render(valid:Boolean = false):void 
 		{
 			if (_render == null)_render = new QuadRender();
 			ChaosEngine.context.setProgram(QuadRender.QUAD_PROGRAM_NAME);

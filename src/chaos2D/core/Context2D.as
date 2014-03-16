@@ -96,6 +96,14 @@ package chaos2D.core
 			_context3D.setVertexBufferAt(2, _vertexUVBuffer, 0, Context3DVertexBufferFormat.FLOAT_2);
 		}
 		
+		public function setCustomizeVertexBufferForTexture(uv:Vector.<Number>, texture:flash.display3D.textures.Texture):void
+		{
+			var vertexBuffer:VertexBuffer3D = _context3D.createVertexBuffer(4, 2);
+			vertexBuffer.uploadFromVector(uv, 0, 4);
+			_context3D.setTextureAt(0, texture);
+			_context3D.setVertexBufferAt(2, vertexBuffer, 0, Context3DVertexBufferFormat.FLOAT_2);
+		}
+		
 		public function drawTriangle():void
 		{
 			_context3D.drawTriangles(_indexBuffer, 0, 2);
@@ -117,6 +125,12 @@ package chaos2D.core
 			_context3D.setTextureAt(0, null);
 			_context3D.setVertexBufferAt(0,null);
 			_context3D.setVertexBufferAt(1,null);
+			_context3D.setVertexBufferAt(2,null);
+		}
+		
+		public function clearBufferForSprite():void
+		{
+			_context3D.setTextureAt(0, null);
 			_context3D.setVertexBufferAt(2,null);
 		}
 		

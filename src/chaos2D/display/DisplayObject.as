@@ -44,7 +44,7 @@ package chaos2D.display
 			_parent = parent;
 		}
 		
-		public function render():void
+		public function render(valid:Boolean = false):void
 		{
 			if (_parent) {
 				var context:Context2D = ChaosEngine.context;

@@ -31,7 +31,7 @@ package
 		
 		private function init(e:Event = null):void 
 		{
-			//addChild(new Stats());
+			addChild(new Stats());
 			removeEventListener(Event.ADDED_TO_STAGE, init);
 			
 			_loader = new Loader();
@@ -48,20 +48,13 @@ package
 		private function startGame():void
 		{
 			// entry point
-			//_engine = new ChaosEngine(stage, stage.stage3Ds[0], Game);
-			//_engine.addEventListener(Event.INIT, onCompleteStage3D);
-			
-			SS = stage
-			SwfParser.addAsset(MovieClip(_loader.contentLoaderInfo.content));
-			addChild(SwfParser.shape);
-			
+			_engine = new ChaosEngine(stage, stage.stage3Ds[0], Game);
+			_engine.addEventListener(Event.INIT, onCompleteStage3D);
 		}
 		
 		private function onCompleteStage3D(e:Event):void 
 		{
-			//SS = stage
-			//SwfParser.addAsset(MovieClip(_loader.contentLoaderInfo.content));
-			//addChild(SwfParser.shape);
+			SwfParser.addAsset(MovieClip(_loader.contentLoaderInfo.content));
 		}
 		
 	}

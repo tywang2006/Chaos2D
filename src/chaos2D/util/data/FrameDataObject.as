@@ -21,12 +21,14 @@ package chaos2D.util.data
 		public var linkage:String;
 		public var bitmapData:BitmapData;
 		public var fit:Object;
+		public var uv:Vector.<Number>;
 		
 		public function FrameDataObject() 
 		{
 			frameIndex = -1;
 			label = null;
 			texture = null;
+			uv = new Vector.<Number>();
 		}
 		
 	}

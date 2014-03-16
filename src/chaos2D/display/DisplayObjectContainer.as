@@ -6,8 +6,8 @@ package chaos2D.display
 	 */
 	public class DisplayObjectContainer extends DisplayObject 
 	{
-		private var _children:Vector.<DisplayObject>;
-		private var _numChildren:int;
+		protected var _children:Vector.<DisplayObject>;
+		protected var _numChildren:int;
 		
 		public function DisplayObjectContainer() 
 		{
@@ -16,7 +16,7 @@ package chaos2D.display
 			_children = new Vector.<DisplayObject>();	
 		}
 		
-		override public function render():void 
+		override public function render(valid:Boolean = false):void 
 		{
 			super.render();
 			var i:int;
@@ -46,7 +46,7 @@ package chaos2D.display
 			_children.push(child);
 			_numChildren++;
 			child.setParent(this);
-			updateWidthHeight();
+			//updateWidthHeight();
 			return child;
 		}
 		
@@ -55,7 +55,7 @@ package chaos2D.display
 			var index:int = _children.indexOf(child);
 			if (index > -1) {
 				child.setParent(null);
-				updateWidthHeight();
+				//updateWidthHeight();
 				return _children.splice(index, 1)[0];
 			}
 			return null;
@@ -65,7 +65,7 @@ package chaos2D.display
 		{
 			return _numChildren;
 		}
-		
+		/*
 		public function updateWidthHeight():void
 		{
 			var i:int;
@@ -84,6 +84,7 @@ package chaos2D.display
 				_height = Math.max(child1.height * (1-_registerPoint.y) + child1.y, child2.height * (1-_registerPoint.y) + child2.y);
 			}
 		}
+		*/
 		
 	}
 
