@@ -48,6 +48,7 @@ package chaos2D.display
 		{
 			if (_parent) {
 				var context:Context2D = ChaosEngine.context;
+				context.setAlphaBuffer(this.alpha * _parent.alpha);
 				context.setMatrix3D(this.matrix3D);
 				context.drawTriangle();
 			}
@@ -141,9 +142,7 @@ package chaos2D.display
 		
 		public function get matrix3D():Matrix3D 
 		{
-			if (_isDirty) {
-				updateMatrix3D();
-			}
+			updateMatrix3D();
 			return _matrix3D;
 		}
 		
@@ -154,6 +153,7 @@ package chaos2D.display
 		
 		public function set alpha(value:Number):void 
 		{
+			if (_alpha == value) return;
 			_alpha = value < 0.0 ? 0.0 : (value > 1.0 ? 1.0 : value); 
 		}
 		

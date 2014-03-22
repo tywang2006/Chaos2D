@@ -35,6 +35,7 @@ package chaos2D.render
 			var vertexSrc:String = "m44 op,va0,vc0 \n" +
 								   "mov v0,va2";
 			var fragmentSrc:String = "tex ft0,v0,fs0 <???> \n" +
+									 "mul ft0,ft0,fc1\n"+	
 									 "mov oc,ft0";
 			
 			var tinted:Boolean = false;

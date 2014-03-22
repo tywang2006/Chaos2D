@@ -31,6 +31,7 @@ package chaos2D.core
 		private var _vertexUVBuffer:VertexBuffer3D;
 		private var _vertexPositionBuffer:VertexBuffer3D;
 		private var _vertexColorBuffer:VertexBuffer3D;
+		private var _alphaBuffer:VertexBuffer3D;
 		private var _indexBuffer:IndexBuffer3D;
 		private var _currentProgram:Program3D;
 		
@@ -58,6 +59,11 @@ package chaos2D.core
 		public function setMatrix3D(m:Matrix3D):void 
 		{
 			_context3D.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX, 0, m, true);
+		}
+		
+		public function setAlphaBuffer(alpha:Number):void
+		{
+			_context3D.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 1, Vector.<Number>([alpha,alpha,alpha,alpha]));
 		}
 		
 		public function setColorConstant(color:Number):void
@@ -159,7 +165,7 @@ package chaos2D.core
 		public function registerProgram(name:String, vertexProgram:ByteArray, fragmentProgram:ByteArray):void
 		{
 			if (_programs[name]) {
-				//trace("Context2D: the program with the same name is existing");
+				trace("Context2D: the program with the same name is existing");
 				return;
 			}
 			var program:Program3D = _context3D.createProgram();

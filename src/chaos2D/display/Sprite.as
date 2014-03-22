@@ -64,7 +64,7 @@ package chaos2D.display
 		
 		override public function render(valid:Boolean = false):void 
 		{
-			if (!_parent) return;
+			if (!_parent || !_visible) return;
 			_currentFrameData = _anim[_currentFrame-1];
 			_image.width = _currentFrameData.width;
 			_image.height = _currentFrameData.height;
