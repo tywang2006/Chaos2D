@@ -38,11 +38,13 @@ package
 		public function Game() 
 		{
 			super();
+			//new Quad(100,100,0xFFFFFFFF*Math.random())
+			//new Sprite("square")
+			var t:Texture = TextureCenter.instance.addBitmap("Bird", new Bird(), false);
 			
-			var t:Texture = TextureCenter.instance.addBitmap("Flower2", new Bird());
-			for (var i:int = 0; i < 1000; i++)
+			for (var i:int = 0; i < 1500; i++)
 			{
-				var sprite:DisplayObject = (Math.random() < 0.5)?new Quad(100,100,0xFFFFFFFF*Math.random()):new Sprite("square");
+				var sprite:DisplayObject = (Math.random() > 0.7)?new Quad(100,100,0xFFFFFFFF*Math.random()):(Math.random()>0.3)?new Sprite("square"):new Image(t);
 				addChild(sprite);
 				sprite.x = 1200 * Math.random();
 				sprite.y = 600 * Math.random();
@@ -53,20 +55,21 @@ package
 				ds.push(Math.random())
 			}
 			
+			
 		}
 		
 		override public function render(valid:Boolean = false):void 
 		{
 			super.render();
-			//return
+			
 			for (var i:int = 0; i < sprites.length; i++) {
 				direct = Math.random();
 				if (direct > 0.4) {
 					sprites[i].x += vs[i];
-					//sprites[i].rotation++;
+					if(sprites[i] is Quad)sprites[i].rotation++;
 				} else {
 					sprites[i].y += vs[i];
-					//sprites[i].rotation--;
+					if(sprites[i] is Quad)sprites[i].rotation--;
 				}
 				if (sprites[i].x > 1200 || sprites[i].x < 0 || sprites[i].y<0 || sprites[i].y>600) 
 				{

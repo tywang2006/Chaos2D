@@ -102,8 +102,7 @@ package chaos2D.render
 			else if (format == "compressedAlpha") bitField |= 1 << 6;
 			
 			var name:String = _programNameCache[bitField];
-			if(name==null)
-			{
+			if (name == null) {
 				name = "IR"+bitField.toString(16);
 				_programNameCache[bitField] = name;
 			}

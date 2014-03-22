@@ -26,10 +26,12 @@ package chaos2D.render
 		
 		override protected function registerPrograms():void 
 		{
+			
 			var vertexSrc:String = "m44 op,va0,vc0";
 			var fragmentSrc:String = "mov ft0,fc0\n" + 
 								     "mul ft0,ft0,fc0\n" +
 									 "mov oc, ft0";
+			
 			
 			var vertexAssembler:AGALMiniAssembler = new AGALMiniAssembler();
 			var fragmentAssembler:AGALMiniAssembler = new AGALMiniAssembler();

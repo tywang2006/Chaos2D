@@ -134,7 +134,7 @@ package chaos2D.core
 		public function clearBufferForImage():void
 		{
 			_context3D.setTextureAt(0, null);
-			_context3D.setVertexBufferAt(0,null);
+			//_context3D.setVertexBufferAt(0,null);
 			_context3D.setVertexBufferAt(1,null);
 			_context3D.setVertexBufferAt(2,null);
 		}

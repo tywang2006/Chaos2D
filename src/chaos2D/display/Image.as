@@ -40,6 +40,7 @@ package chaos2D.display
 			ChaosEngine.context.setAlphaBlend();
 			if(!ignoreTexture) ChaosEngine.context.setVertexBufferForTexture(_texture.base);
 			super.render();
+			ChaosEngine.context.clearBufferForImage();
 		}
 		
 		public function set texture(value:Texture):void 
