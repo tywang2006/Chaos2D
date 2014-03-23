@@ -1,5 +1,8 @@
 package chaos2D.display 
 {
+	import chaos2D.ChaosEngine;
+	import chaos2D.texture.Texture;
+	import flash.display3D.VertexBuffer3D;
 	/**
 	 * ...
 	 * @author Chao
@@ -16,7 +19,7 @@ package chaos2D.display
 			_children = new Vector.<DisplayObject>();	
 		}
 		
-		override public function render(valid:Boolean = false):void 
+		override public function render(customizeTexture:Texture = null, uv:VertexBuffer3D = null):void 
 		{
 			super.render();
 			var i:int;

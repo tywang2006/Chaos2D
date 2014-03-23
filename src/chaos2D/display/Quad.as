@@ -4,6 +4,8 @@ package chaos2D.display
 	import chaos2D.core.Context2D;
 	import chaos2D.render.QuadRender;
 	import chaos2D.render.RenderBase;
+	import chaos2D.texture.Texture;
+	import flash.display3D.VertexBuffer3D;
 	/**
 	 * ...
 	 * @author Chao
@@ -11,7 +13,6 @@ package chaos2D.display
 	public class Quad extends DisplayObject 
 	{
 		private var _render:RenderBase;
-		private var _color:uint;
 		
 		public function Quad(width:Number, height:Number, color:uint = 0xFFFFFFFF) 
 		{
@@ -22,18 +23,19 @@ package chaos2D.display
 			_isDirty = true;
 		}
 		
-		override public function render(valid:Boolean = false):void 
+		override public function render(customizeTexture:Texture = null, uv:VertexBuffer3D = null):void 
 		{
+			if (!_parent) return;
 			if (_render == null)_render = new QuadRender();
-			ChaosEngine.context.setProgram(QuadRender.QUAD_PROGRAM_NAME);
-			ChaosEngine.context.setAlphaBlend();
-			ChaosEngine.context.setColorConstant(_color);
-			super.render();
-		}
-		
-		final public function set color(value:uint):void 
-		{
-			_color = value;
+			var context:Context2D = ChaosEngine.context;
+			context.setProgram(QuadRender.QUAD_PROGRAM_NAME);
+			context.setAlphaBlend();
+			
+			if (this.color >= 0) ChaosEngine.context.setColorConstant(_color);
+			else context.setColorConstant(_color);
+			context.setAlphaBuffer(this.alpha * _parent.alpha);
+			context.setMatrix3D(this.matrix3D);
+			context.drawTriangle();
 		}
 		
 	}

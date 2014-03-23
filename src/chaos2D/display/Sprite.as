@@ -7,6 +7,7 @@ package chaos2D.display
 	import chaos2D.texture.TextureCenter;
 	import chaos2D.util.data.FrameDataObject;
 	import chaos2D.util.data.SwfParser;
+	import flash.display3D.VertexBuffer3D;
 	import flash.geom.Matrix3D;
 	/**
 	 * ...
@@ -62,7 +63,7 @@ package chaos2D.display
 			if (_currentFrame < 1)_currentFrame = 1;
 		}
 		
-		override public function render(valid:Boolean = false):void 
+		override public function render(customizeTexture:Texture = null, uv:VertexBuffer3D = null):void 
 		{
 			if (!_parent || !_visible) return;
 			_currentFrameData = _anim[_currentFrame-1];
@@ -71,12 +72,11 @@ package chaos2D.display
 			_image.x = _currentFrameData.offsetX;
 			_image.y = _currentFrameData.offsetY;
 			ChaosEngine.context.setMatrix3D(this.matrix3D);
-			ChaosEngine.context.setCustomizeVertexBufferForTexture(_currentFrameData.uvBuffer, _texture.base);
 
 			var i:int;
 			for (i = 0; i < _numChildren; i++) {
 				if (_image == _children[i]) {
-					_image.render(true);
+					_image.render(_texture, _currentFrameData.uvBuffer);
 				} else {
 					_children[i].render();
 				}

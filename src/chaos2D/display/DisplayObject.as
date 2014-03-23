@@ -2,7 +2,9 @@ package chaos2D.display
 {
 	import chaos2D.ChaosEngine;
 	import chaos2D.core.Context2D;
+	import chaos2D.texture.Texture;
 	import flash.display.Stage;
+	import flash.display3D.VertexBuffer3D;
 	import flash.geom.Matrix;
 	import flash.geom.Matrix3D;
 	import flash.geom.Point;
@@ -27,6 +29,9 @@ package chaos2D.display
 		protected var _rotation:Number = 0;
 		protected var _isDirty:Boolean = false;
 		protected var _registerPoint:Point;
+		protected var _tinted:Boolean = false;
+		protected var _color:Number = -1;
+		protected var _blendMode:String = BlendMode.AUTO;
 		
 		public function DisplayObject() 
 		{
@@ -44,10 +49,11 @@ package chaos2D.display
 			_parent = parent;
 		}
 		
-		public function render(valid:Boolean = false):void
+		public function render(customizeTexture:Texture = null, uv:VertexBuffer3D = null):void
 		{
 			if (_parent) {
 				var context:Context2D = ChaosEngine.context;
+				if (this.color>=0) context.setColorConstant(this.color);
 				context.setAlphaBuffer(this.alpha * _parent.alpha);
 				context.setMatrix3D(this.matrix3D);
 				context.drawTriangle();
@@ -193,6 +199,41 @@ package chaos2D.display
 		{
 			_registerPoint = value;
 		}
+		
+		public function get color():Number 
+		{
+			if (_parent && _parent.tinted) {
+				return _parent.color;
+			}
+			return _color;
+		}
+		
+		public function set color(value:Number):void 
+		{
+			if (_color == value) return;
+			if (value >= 0) _tinted = true;
+			_color = value;
+		}
+		
+		public function get tinted():Boolean
+		{
+			return _tinted;
+		}
+		
+		public function get blendMode():String 
+		{
+			if (_parent && _parent.blendMode) {
+				return _parent.blendMode;
+			}
+			return _blendMode;
+		}
+		
+		public function set blendMode(value:String):void 
+		{
+			if (_blendMode == value) return;
+			_blendMode = value;
+		}
+		
 		
 	}
 

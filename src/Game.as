@@ -11,6 +11,7 @@ package
 	import chaos2D.texture.Texture;
 	import chaos2D.texture.TextureCenter;
 	import flash.display.Bitmap;
+	import flash.display3D.VertexBuffer3D;
 	import flash.geom.Point;
 	
 	/**
@@ -42,9 +43,11 @@ package
 			//new Sprite("square")
 			var t:Texture = TextureCenter.instance.addBitmap("Bird", new Bird(), false);
 			
-			for (var i:int = 0; i < 1500; i++)
+			for (var i:int = 0; i < 1000; i++)
 			{
-				var sprite:DisplayObject = (Math.random() > 0.7)?new Quad(100,100,0xFFFFFFFF*Math.random()):(Math.random()>0.3)?new Sprite("square"):new Image(t);
+				//var sprite:DisplayObject = (Math.random() > 0.7)?new Quad(100, 100, 0xFFFFFFFF * Math.random()):(Math.random() > 0.3)?new Sprite("square"):new Image(t);
+				var sprite:DisplayObject = new Sprite("square");
+				sprite.color = 0xFFFFFFFF*Math.random();
 				addChild(sprite);
 				sprite.x = 1200 * Math.random();
 				sprite.y = 600 * Math.random();
@@ -58,10 +61,10 @@ package
 			
 		}
 		
-		override public function render(valid:Boolean = false):void 
+		override public function render(customizeTexture:Texture = null, uv:VertexBuffer3D = null):void 
 		{
 			super.render();
-			
+			return
 			for (var i:int = 0; i < sprites.length; i++) {
 				direct = Math.random();
 				if (direct > 0.4) {

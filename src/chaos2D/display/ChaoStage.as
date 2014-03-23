@@ -1,6 +1,8 @@
 package chaos2D.display 
 {
 	import chaos2D.ChaosEngine;
+	import chaos2D.texture.Texture;
+	import flash.display3D.VertexBuffer3D;
 	import flash.geom.Matrix;
 	import flash.geom.Matrix3D;
 	/**
@@ -15,7 +17,7 @@ package chaos2D.display
 			super();
 		}
 		
-		override public function render(valid:Boolean = false):void 
+		override public function render(customizeTexture:Texture = null, uv:VertexBuffer3D = null):void 
 		{
 			super.render();
 		}
