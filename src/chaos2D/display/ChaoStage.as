@@ -15,6 +15,7 @@ package chaos2D.display
 		public function ChaoStage() 
 		{
 			super();
+			_blendMode = BlendMode.NORMAL;
 		}
 		
 		override public function render(customizeTexture:Texture = null, uv:VertexBuffer3D = null):void 

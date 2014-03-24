@@ -29,7 +29,7 @@ package chaos2D.display
 			if (_render == null)_render = new QuadRender();
 			var context:Context2D = ChaosEngine.context;
 			context.setProgram(QuadRender.QUAD_PROGRAM_NAME);
-			context.setAlphaBlend();
+			context.setAlphaBlend(BlendMode.getBlendFactors(this.blendMode));
 			
 			if (this.color >= 0) ChaosEngine.context.setColorConstant(_color);
 			else context.setColorConstant(_color);

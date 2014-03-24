@@ -46,9 +46,9 @@ package chaos2D.core
 			createVertexAndIndexBuffer();
 			setVertexBufferForPosition();
 		}
-		public function setAlphaBlend():void
+		public function setAlphaBlend(detals:Array):void
 		{
-			_context3D.setBlendFactors(Context3DBlendFactor.SOURCE_ALPHA, Context3DBlendFactor.ONE_MINUS_SOURCE_ALPHA);
+			_context3D.setBlendFactors(detals[0], detals[1]);
 		}
 		
 		public function setProjection(stageWidth:Number, stageHeight:Number):void

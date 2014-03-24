@@ -39,7 +39,7 @@ package chaos2D.display
 			
 			_programName = ImageRender(_render).generateProgramName(this.color >= 0, false);
 			ChaosEngine.context.setProgram(_programName);
-			ChaosEngine.context.setAlphaBlend();
+			ChaosEngine.context.setAlphaBlend(BlendMode.getBlendFactors(this.blendMode));
 			if (!customizeTexture && !uv) ChaosEngine.context.setVertexBufferForTexture(_texture.base);
 			else ChaosEngine.context.setCustomizeVertexBufferForTexture(uv, customizeTexture.base);
 			super.render();

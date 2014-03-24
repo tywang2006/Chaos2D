@@ -8,6 +8,7 @@ package chaos2D.display
 	import flash.geom.Matrix;
 	import flash.geom.Matrix3D;
 	import flash.geom.Point;
+	import flash.geom.Rectangle;
 	import flash.geom.Vector3D;
 	/**
 	 * ...
@@ -40,8 +41,25 @@ package chaos2D.display
 			_scaleX = _scaleY = 1;
 			_alpha = 1;
 			_visible = true;
-			_matrix3D = new Matrix3D();
+			//_matrix3D = new Matrix3D();
 			_registerPoint = new Point(0, 0);// factor
+		}
+		
+		public function getBound(targetCoordinateSpace:DisplayObject):Rectangle
+		{
+			var targetMatrix:Matrix = targetCoordinateSpace.matrix;
+			if (targetCoordinateSpace.parent && targetMatrix) {
+				var matrix:Matrix = this.matrix;
+				var msx:Number = matrix.a * Math.pow(matrix.a * matrix.a + matrix.b * matrix.b, 0.5) / Math.abs(matrix.a);
+				var msy:Number = matrix.d * Math.pow(matrix.c * matrix.c + matrix.d * matrix.d, 0.5) / Math.abs(matrix.d);
+				var tmsx:Number = targetMatrix.a * Math.pow(targetMatrix.a * targetMatrix.a + targetMatrix.b * targetMatrix.b, 0.5) / Math.abs(matrix.a);
+				var tmsy:Number = targetMatrix.d * Math.pow(targetMatrix.c * targetMatrix.c + targetMatrix.d * targetMatrix.d, 0.5) / Math.abs(targetMatrix.d);
+				var left:Number = (matrix.tx - targetMatrix.tx - _registerPoint.x * msx) * tmsx;
+				var right:Number = (matrix.ty - targetMatrix.ty - _registerPoint.y * msy) * tmsy;
+				
+				return new Rectangle(left, right, msx * tmsx, msy * tmsy);
+			}
+			return null;
 		}
 		
 		public function setParent(parent:DisplayObjectContainer):void
@@ -63,6 +81,7 @@ package chaos2D.display
 		private function updateMatrix3D():void
 		{
 			if (_parent) {
+				if (_matrix3D == null) _matrix3D = new Matrix3D();
 				_matrix3D.identity();
 				_matrix3D.appendTranslation(-_registerPoint.x, -_registerPoint.y, 0);
 				_matrix3D.appendScale(this.width, this.height, 1);
@@ -71,6 +90,8 @@ package chaos2D.display
 				_matrix3D.appendTranslation(_registerPoint.x, _registerPoint.y, 0);
 				_matrix3D.append(_parent.matrix3D);
 				_isDirty = false;
+			} else {
+				_matrix3D = null;
 			}
 		}
 		
@@ -222,7 +243,7 @@ package chaos2D.display
 		
 		public function get blendMode():String 
 		{
-			if (_parent && _parent.blendMode) {
+			if (_parent && _parent.blendMode && _blendMode == BlendMode.AUTO) {
 				return _parent.blendMode;
 			}
 			return _blendMode;
@@ -232,6 +253,23 @@ package chaos2D.display
 		{
 			if (_blendMode == value) return;
 			_blendMode = value;
+		}
+		
+		public function get matrix():Matrix
+		{
+			var m3d:Matrix3D = this.matrix3D;
+			if(m3d) {
+				var raw:Vector.<Number> = m3d.rawData;
+				var a:Number = raw[0];
+				var b:Number = raw[1];
+				var c:Number = raw[4];
+				var d:Number = raw[5];
+				var tx:Number = raw[12];
+				var ty:Number = raw[13];
+				return new Matrix(a, b, c, d, tx, ty);
+			}
+			return null;
+			
 		}
 		
 		
