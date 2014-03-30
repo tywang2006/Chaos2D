@@ -9,6 +9,7 @@ package
 	import chaos2D.display.Quad;
 	import chaos2D.display.Sprite;
 	import chaos2D.text.TextField;
+	import chaos2D.texture.BitmapTexture;
 	import chaos2D.texture.Texture;
 	import chaos2D.texture.TextureCenter;
 	import flash.display.Bitmap;
@@ -43,8 +44,8 @@ package
 			//new Quad(100,100,0xFFFFFFFF*Math.random())
 			//new Sprite("square")
 			
-			var t:Texture = TextureCenter.instance.addBitmap("Bird", new Bird(), false);
 			
+			/*
 			for (var i:int = 0; i < 1000; i++)
 			{
 				//var sprite:DisplayObject = (Math.random() > 0.7)?new Quad(100, 100, 0xFFFFFFFF * Math.random()):(Math.random() > 0.3)?new Sprite("square"):new Image(t);
@@ -59,11 +60,16 @@ package
 				vs.push((Math.random() - 0.5) * 100);
 				ds.push(Math.random())
 			}
-			
-			/*
-			var tt:TextField = new TextField(100, 100, "superman", "Verdana",60,0xFFFFFFFF);
-			addChild(tt)
 			*/
+		
+			
+			var tt:TextField = new TextField(128, 128, "superman", "Verdana", 10, 0xFFCC0000);
+			var t:Texture = TextureCenter.instance.getTextureByID("Bird");
+			var image:Image = new Image(t);
+			var container:DisplayObjectContainer = new DisplayObjectContainer();
+			container.addChild(image);
+			//addChild(container)
+			addChild(tt)
 		}
 		
 		override public function render(customizeTexture:Texture = null, uv:VertexBuffer3D = null):void 

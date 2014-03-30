@@ -31,7 +31,7 @@ package
 		
 		private function init(e:Event = null):void 
 		{
-			addChild(new Stats());
+			//addChild(new Stats());
 			removeEventListener(Event.ADDED_TO_STAGE, init);
 			
 			_loader = new Loader();

@@ -50,6 +50,7 @@ package chaos2D.texture
         override public function get width():Number { return _width; }
         override public function get height():Number { return _height; }
         override public function get mipMapping():Boolean { return _mipMapping; }
+		public function get data():BitmapData { return _data; }
 		
 	}
 

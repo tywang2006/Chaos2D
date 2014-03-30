@@ -1,5 +1,6 @@
 package chaos2D.text 
 {
+	import chaos2D.ChaosEngine;
 	import chaos2D.display.DisplayObject;
 	import chaos2D.display.DisplayObjectContainer;
 	import chaos2D.display.Image;
@@ -10,6 +11,7 @@ package chaos2D.text
 	import chaos2D.util.getNextPowerOfTwo;
 	import chaos2D.util.HAlign;
 	import chaos2D.util.VAlign;
+	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.StageQuality;
 	import flash.display3D.VertexBuffer3D;
@@ -46,9 +48,12 @@ package chaos2D.text
 		private var _image:Image;
 		private var _requresRedraw:Boolean = true;
 		private var _autoScale:Boolean;
+		private var _texture:Texture;
+		private var _bitmapData:BitmapData;
 		
 		public function TextField(width:int, height:int, text:String, fontName:String = "Verdana", fontSize:Number=12, color:uint=0x0,bold:Boolean=false) 
 		{
+			super();
 			_text = text?text:"";
 			_fontSize = fontSize;
 			_color = color;
@@ -59,6 +64,11 @@ package chaos2D.text
 			_hitArea = new Rectangle(0, 0, width, height);
 			_fontName = fontName;
 			
+			redraw();
+			
+			_image = new Image(_texture);
+			addChild(_image);
+			
 		}
 		
 		public function dispose():void
@@ -68,9 +78,11 @@ package chaos2D.text
 		
 		override public function render(customizeTexture:Texture = null, uv:VertexBuffer3D = null):void 
 		{
-			if (_requresRedraw) redraw();
-			super.render(customizeTexture, uv);
+			//if (_requresRedraw) redraw();
+			ChaosEngine.context.setMatrix3D(this.matrix3D);
+			super.render();
 		}
+		
 		
 		public function redraw():void
 		{
@@ -85,20 +97,17 @@ package chaos2D.text
 			if (_textBounds == null) {
 				_textBounds = new Rectangle();
 			}
-			var bitmapData:BitmapData = renderText(1, _textBounds);
+			renderText(1, _textBounds);
 			_hitArea.width = bitmapData.width;
 			_hitArea.height = bitmapData.height;
+				
+			_texture = TextureCenter.instance.addBitmapData("Bird", _bitmapData);
 			
-			var texture:Texture = TextureCenter.instance.addBitmapData(getTimer().toString(), bitmapData);
-			bitmapData.dispose();
-			
-			if (_image == null) {
-				_image = new Image(texture);
-				addChild(_image);
-			} else {
+			if (_image != null) {
 				BitmapTexture(_image.texture).dispose();
-				_image.texture = texture;
+				_image.texture = _texture;
 			}
+			
 		}
 		
 		public function renderText(scale:Number, resultTextBounds:Rectangle):BitmapData
@@ -117,6 +126,7 @@ package chaos2D.text
 				vAlign = VAlign.TOP;
 			}
 			
+			
 			var textFormat:TextFormat = new TextFormat(_fontName, _fontSize * scale, _color, _bold, _italic, _underline, null, null, _hAlign);
 			textFormat.kerning = _kerning;
 			_nativeTextField.defaultTextFormat = textFormat;
@@ -129,6 +139,8 @@ package chaos2D.text
 			_nativeTextField.text = _text;
 			_nativeTextField.filters = _nativeFilters;
 			
+			_nativeTextField.text = _text;
+			
 			if (_nativeTextField.textWidth == 0.0 || _nativeTextField.textHeight == 0.0) _nativeTextField.embedFonts = false;
 			formatText(_nativeTextField, textFormat);
 			
@@ -139,6 +151,7 @@ package chaos2D.text
 			
 			if (isHorizontalAutoSize)_nativeTextField.width = width = Math.ceil(textWidth + 5);
 			if (isVerticalAutoSize)_nativeTextField.height = height = Math.ceil(textHeight + 4);
+			
 			
 			if (width < 1) width = 1.0;
 			if (height < 1) height = 1.0;
@@ -154,19 +167,20 @@ package chaos2D.text
 			else if (vAlign == VAlign.BOTTOM) textOffsetY = height - textHeight - 2;
 			
 			var filterOffset:Point = calculateFilterOffset(_nativeTextField, hAlign, vAlign);
-			var bitmapData:BitmapData = new BitmapData(getNextPowerOfTwo(width), getNextPowerOfTwo(height), true, 0x0);
+			_bitmapData = new BitmapData(getNextPowerOfTwo(width), getNextPowerOfTwo(height), true, 0x0);
 			var drawMatrix:Matrix = new Matrix(1, 0, 0, 1, filterOffset.x, filterOffset.y + int(textOffsetY) - 2);
-			var drawWithQualityFunc:Function = "drawWithQuality" in bitmapData?bitmapData["drawWithQuality"]:null;
+			var drawWithQualityFunc:Function = "drawWithQuality" in _bitmapData?_bitmapData["drawWithQuality"]:null;
 			
 			if (drawWithQualityFunc is Function) {
-				drawWithQualityFunc.call(bitmapData, _nativeTextField, drawMatrix, null, null, null, false, StageQuality.MEDIUM);
+				drawWithQualityFunc.call(_bitmapData, _nativeTextField, drawMatrix, null, null, null, false, StageQuality.MEDIUM);
 			} else {
-				bitmapData.draw(_nativeTextField, drawMatrix);
+				_bitmapData.draw(_nativeTextField, drawMatrix);
 			}
+			
 			_nativeTextField.text = "";
 			resultTextBounds.setTo((textOffsetX + filterOffset.x) / scale, (textOffsetY + filterOffset.y) / scale, textWidth / scale, textHeight / scale);
 			
-			return bitmapData;
+			return _bitmapData;
 		}
 		
 		private function calculateFilterOffset(textField:flash.text.TextField,
@@ -227,19 +241,23 @@ package chaos2D.text
 		
 		protected function formatText(textField:flash.text.TextField, textFormat:TextFormat):void { }
 		
+		
 		override public function get width():Number { return _hitArea.width; }
 		override public function set width(value:Number):void 
 		{
-			_hitArea.width = value;
+			_width = _hitArea.width = value;
 			_requresRedraw = true;
+			_image.width = value;
 		}
 		
 		override public function get height():Number { return _hitArea.height; }
 		override public function set height(value:Number):void 
 		{
-			_hitArea.height = value;
+			_width = _hitArea.height = value;
 			_requresRedraw = true;
+			_image.height = value;
 		}
+		
 		
 		public function get text():String { return _text; }
         public function set text(value:String):void
@@ -373,6 +391,16 @@ package chaos2D.text
 		public function get isVerticalAutoSize():Boolean
 		{
 			return _autoSize == TextureFieldAutoSize.HORIZONTAL || TextureFieldAutoSize.BOTH_DIRECTIONS
+		}
+		
+		public function get texture():Texture 
+		{
+			return _texture;
+		}
+		
+		public function get bitmapData():BitmapData 
+		{
+			return _bitmapData;
 		}
 		
 	}

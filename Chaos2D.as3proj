@@ -11,7 +11,7 @@
     <movie version="11" />
     <movie minorVersion="9" />
     <movie platform="Flash Player" />
-    <movie background="#FFFFFF" />
+    <movie background="#000000" />
   </output>
   <!-- Other classes to be compiled into your SWF -->
   <classpaths>

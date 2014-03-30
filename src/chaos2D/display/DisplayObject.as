@@ -37,7 +37,7 @@ package chaos2D.display
 		public function DisplayObject() 
 		{
 			_y = _x = 0;
-			_width = _height = 0;
+			_width = _height = 1;
 			_scaleX = _scaleY = 1;
 			_alpha = 1;
 			_visible = true;
