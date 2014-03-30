@@ -40,6 +40,11 @@ package chaos2D.texture
 			_base.uploadFromBitmapData(_data,0);
 		}
 		
+		public function dispose():void
+		{
+			_base.dispose();
+		}
+		
 		override public function get base():* { return _base; }
         override public function get format():String { return Context3DTextureFormat.BGRA; }
         override public function get width():Number { return _width; }
