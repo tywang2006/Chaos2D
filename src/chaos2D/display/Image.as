@@ -48,6 +48,7 @@ package chaos2D.display
 		
 		public function set texture(value:Texture):void 
 		{
+			if (value == _texture) return;
 			_texture = value;
 		}
 		

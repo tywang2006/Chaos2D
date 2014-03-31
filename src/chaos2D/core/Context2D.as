@@ -39,7 +39,7 @@ package chaos2D.core
 		public function Context2D(context3D:Context3D) 
 		{
 			_context3D = context3D;
-			_context3D.enableErrorChecking = false
+			_context3D.enableErrorChecking = false;
 			_programs = new Dictionary();
 			_rawData = new ContextData();
 			

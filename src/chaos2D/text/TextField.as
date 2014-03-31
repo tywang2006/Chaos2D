@@ -27,7 +27,7 @@ package chaos2D.text
 	 * ...
 	 * @author Chao
 	 */
-	public class TextField extends DisplayObjectContainer 
+	public class TextField 
 	{
 		
 		private var _fontSize:Number;
@@ -45,18 +45,19 @@ package chaos2D.text
 		private var _nativeFilters:Array;
 		private var _resultTextBounds:Rectangle;
 		private var _textBounds:Rectangle;
-		private var _image:Image;
-		private var _requresRedraw:Boolean = true;
+		private var _requresRedraw:Boolean = false;
 		private var _autoScale:Boolean;
 		private var _texture:Texture;
 		private var _bitmapData:BitmapData;
+		private var _fontColor:uint;
+		private var _width:int;
+		private var _height:int;
 		
 		public function TextField(width:int, height:int, text:String, fontName:String = "Verdana", fontSize:Number=12, color:uint=0x0,bold:Boolean=false) 
 		{
-			super();
 			_text = text?text:"";
 			_fontSize = fontSize;
-			_color = color;
+			_fontColor = color;
 			_hAlign = HAlign.CENTER;
 			_vAlign = VAlign.CENTER;
 			_bold = bold;
@@ -64,25 +65,11 @@ package chaos2D.text
 			_hitArea = new Rectangle(0, 0, width, height);
 			_fontName = fontName;
 			
-			redraw();
-			
-			_image = new Image(_texture);
-			addChild(_image);
+			//redraw();
+			createRenderedContents();
 			
 		}
-		
-		public function dispose():void
-		{
-			if (_image) BitmapTexture(_image.texture).dispose();
-		}
-		
-		override public function render(customizeTexture:Texture = null, uv:VertexBuffer3D = null):void 
-		{
-			//if (_requresRedraw) redraw();
-			ChaosEngine.context.setMatrix3D(this.matrix3D);
-			super.render();
-		}
-		
+
 		
 		public function redraw():void
 		{
@@ -100,17 +87,13 @@ package chaos2D.text
 			renderText(1, _textBounds);
 			_hitArea.width = bitmapData.width;
 			_hitArea.height = bitmapData.height;
-				
-			_texture = TextureCenter.instance.addBitmapData("Bird", _bitmapData);
 			
-			if (_image != null) {
-				BitmapTexture(_image.texture).dispose();
-				_image.texture = _texture;
-			}
+			if (_texture) BitmapTexture(_texture).dispose();
+			_texture = TextureCenter.instance.addBitmapData(String(getTimer()*Math.random()), _bitmapData);
 			
 		}
 		
-		public function renderText(scale:Number, resultTextBounds:Rectangle):BitmapData
+		private function renderText(scale:Number, resultTextBounds:Rectangle):BitmapData
 		{
 			var width:Number = _hitArea.width * scale;
 			var height:Number = _hitArea.height * scale;
@@ -127,7 +110,7 @@ package chaos2D.text
 			}
 			
 			
-			var textFormat:TextFormat = new TextFormat(_fontName, _fontSize * scale, _color, _bold, _italic, _underline, null, null, _hAlign);
+			var textFormat:TextFormat = new TextFormat(_fontName, _fontSize * scale, _fontColor, _bold, _italic, _underline, null, null, _hAlign);
 			textFormat.kerning = _kerning;
 			_nativeTextField.defaultTextFormat = textFormat;
 			_nativeTextField.width = width;
@@ -240,24 +223,7 @@ package chaos2D.text
 		}
 		
 		protected function formatText(textField:flash.text.TextField, textFormat:TextFormat):void { }
-		
-		
-		override public function get width():Number { return _hitArea.width; }
-		override public function set width(value:Number):void 
-		{
-			_width = _hitArea.width = value;
-			_requresRedraw = true;
-			_image.width = value;
-		}
-		
-		override public function get height():Number { return _hitArea.height; }
-		override public function set height(value:Number):void 
-		{
-			_width = _hitArea.height = value;
-			_requresRedraw = true;
-			_image.height = value;
-		}
-		
+	
 		
 		public function get text():String { return _text; }
         public function set text(value:String):void
@@ -300,7 +266,6 @@ package chaos2D.text
             }
         }
         
-        /** The vertical alignment of the text. @default center @see starling.utils.VAlign */
         public function get vAlign():String { return _vAlign; }
         public function set vAlign(value:String):void
         {
@@ -383,6 +348,7 @@ package chaos2D.text
             _requresRedraw = true;
         }
 		
+		
 		public function get isHorizontalAutoSize():Boolean
 		{
 			return _autoSize == TextureFieldAutoSize.VERTICAL || TextureFieldAutoSize.BOTH_DIRECTIONS;
@@ -393,8 +359,12 @@ package chaos2D.text
 			return _autoSize == TextureFieldAutoSize.HORIZONTAL || TextureFieldAutoSize.BOTH_DIRECTIONS
 		}
 		
+		
 		public function get texture():Texture 
 		{
+			if (_requresRedraw) {
+				redraw();
+			}
 			return _texture;
 		}
 		
