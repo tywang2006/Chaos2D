@@ -39,6 +39,8 @@ package
 		[Embed(source = "../texture/bird.jpg")]
 		private var Bird:Class;
 		
+		
+		
 		private var tt:TextField;
 		
 		public function Game() 
@@ -47,25 +49,24 @@ package
 			//new Quad(100,100,0xFFFFFFFF*Math.random())
 			//new Sprite("square")
 			
-			
-			
 			for (var i:int = 0; i < 1000; i++)
 			{
-				tt = new TextField(100, 20, String(Math.random() * 999999), "Verdana", 10 * Math.random()+10, 0xFFFFFFFF*Math.random());
-				var sprite:DisplayObject = (Math.random() > 0.9)?new Quad(100, 100, 0xFFFFFFFF * Math.random()):(Math.random() > 0.8)?new Sprite("square"):new Image(tt.texture);
-				sprite.blendMode = BlendMode.SCREEN;
-				sprite.color = 0xFFFFFFFF*Math.random();
+				//tt = new TextField(100, 20, String(Math.random() * 999999), "Verdana", 10 * Math.random()+10, 0xFFFFFFFF*Math.random());
+				//var sprite:DisplayObject = (Math.random() > 0.9)?new Quad(100, 100, 0xFFFFFFFF * Math.random()):(Math.random() > 0.8)?new Sprite("square"):new Image(tt.texture);
+				var sprite:DisplayObject = new Sprite("fly");
+				//sprite.blendMode = BlendMode.SCREEN;
+				//sprite.color = 0xFFFFFFFF*Math.random();
 				addChild(sprite);
-				sprite.x = 1200 * Math.random();
-				sprite.y = 600 * Math.random();
+				sprite.x = 1024 * 0.4;
+				sprite.y = 600 * 0.5;
 				sprite.registerPoint = new Point(0.5, 0.5);
-				sprite.scaleX = sprite.scaleY = 3*(Math.random() - 0.5);
+				//sprite.scaleX = sprite.scaleY = 3*(Math.random() - 0.5);
 				sprites.push(sprite);
 				vs.push((Math.random() - 0.5) * 100);
 				ds.push(Math.random())
 			}
 			
-	
+			
 			
 		}
 		

@@ -1,9 +1,11 @@
 package 
 {
 	import chaos2D.ChaosEngine;
-	import chaos2D.util.data.SwfParser;
+	import chaos2D.texture.TextureCenter;
+	import chaos2D.util.data.AssetParser;
 	import chaos2D.util.Stats;
 	import flash.display.Bitmap;
+	import flash.display.BitmapData;
 	import flash.display.Loader;
 	import flash.display.MovieClip;
 	import flash.display.Sprite;
@@ -18,6 +20,12 @@ package
 		[Embed(source = "../texture/movie.swf", mimeType = "application/octet-stream")]
 		private var assetClass:Class;
 		
+		[Embed(source = "../texture/mySpritesheet.png")]
+		private var sheetBitmapData:Class;
+		
+		[Embed(source = "../texture/mySpritesheet.xml", mimeType = "application/octet-stream")]
+		private var sheet:Class; 
+		
 		
 		private var _engine:ChaosEngine;
 		private var _loader:Loader;
@@ -31,7 +39,7 @@ package
 		
 		private function init(e:Event = null):void 
 		{
-			//addChild(new Stats());
+			addChild(new Stats());
 			removeEventListener(Event.ADDED_TO_STAGE, init);
 			
 			_loader = new Loader();
@@ -48,13 +56,15 @@ package
 		private function startGame():void
 		{
 			// entry point
+			
 			_engine = new ChaosEngine(stage, stage.stage3Ds[0], Game);
 			_engine.addEventListener(Event.INIT, onCompleteStage3D);
 		}
 		
 		private function onCompleteStage3D(e:Event):void 
 		{
-			SwfParser.addAsset(MovieClip(_loader.contentLoaderInfo.content));
+			AssetParser.addAsset(MovieClip(_loader.contentLoaderInfo.content));
+			AssetParser.addAsset(new XML(new sheet()), TextureCenter.instance.addBitmap("SHEET", new sheetBitmapData()));
 		}
 		
 	}

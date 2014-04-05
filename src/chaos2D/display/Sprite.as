@@ -6,7 +6,7 @@ package chaos2D.display
 	import chaos2D.texture.Texture;
 	import chaos2D.texture.TextureCenter;
 	import chaos2D.util.data.FrameDataObject;
-	import chaos2D.util.data.SwfParser;
+	import chaos2D.util.data.AssetParser;
 	import flash.display3D.VertexBuffer3D;
 	import flash.geom.Matrix3D;
 	/**
@@ -28,7 +28,7 @@ package chaos2D.display
 		public function Sprite(animName:String) 
 		{
 			super();
-			_anim = SwfParser.getAnim(animName);
+			_anim = AssetParser.getAnim(animName);
 			if (!_anim) {
 				throw ArgumentError("Image: anim can't be NULL!");
 			}
@@ -67,8 +67,8 @@ package chaos2D.display
 		{
 			if (!_parent || !_visible) return;
 			_currentFrameData = _anim[_currentFrame-1];
-			_image.width = _currentFrameData.width;
-			_image.height = _currentFrameData.height;
+			_image.width = _currentFrameData.rawWidth;
+			_image.height = _currentFrameData.rawHeight;
 			_image.x = _currentFrameData.offsetX;
 			_image.y = _currentFrameData.offsetY;
 			ChaosEngine.context.setMatrix3D(this.matrix3D);
@@ -86,6 +86,7 @@ package chaos2D.display
 				_currentFrame++;
 				if (_currentFrame > _totalFrames) _currentFrame = 1;
 			}
+			
 		}
 		
 		public function get currentFrame():int 

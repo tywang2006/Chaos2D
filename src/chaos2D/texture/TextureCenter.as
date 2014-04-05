@@ -50,6 +50,14 @@ package chaos2D.texture
 			return _assets[id];
 		}
 		
+		public function setTextureByID(id:String, texture:Texture):void
+		{
+			if (_assets[id]) {
+				trace(id + " has been overwriten");
+			}
+			_assets[id] = texture;
+		}
+		
 		public static function get instance():TextureCenter
 		{
 			if (!_instance) {

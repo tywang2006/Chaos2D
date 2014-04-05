@@ -1,6 +1,7 @@
 package chaos2D.util.data 
 {
 	import chaos2D.ChaosEngine;
+	import chaos2D.texture.BitmapTexture;
 	import chaos2D.texture.Texture;
 	import chaos2D.texture.TextureCenter;
 	import chaos2D.util.data.layout.SpriteSheetPacker;
@@ -11,33 +12,48 @@ package chaos2D.util.data
 	import flash.geom.Matrix;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
+	import flash.utils.Dictionary;
 	import flash.utils.getQualifiedSuperclassName;
 	/**
 	 * ...
 	 * @author Chao
 	 */
-	public class SwfParser 
+	public class AssetParser 
 	{
 		private static var anims:Object = new Object();
 		
 		
-		public static function addAsset(asset:MovieClip):void
+		public static function addAsset(asset:*, texture:BitmapTexture = null):void
 		{
 			if (!asset) {
 				throw "asset can't be NULL";
 			}
-			var linkages:Vector.<String> = asset.loaderInfo.applicationDomain.getQualifiedDefinitionNames();
-			var i:int;
-			var ClassReference:Class;
-			var mc:MovieClip;
-			for (i = 0; i < linkages.length; i++) {
-				
-				ClassReference = asset.loaderInfo.applicationDomain.getDefinition(linkages[i]) as Class;
-				if (getQualifiedSuperclassName(ClassReference)=="flash.display::MovieClip") {
-					mc = new ClassReference() as MovieClip;
-					buildSpriteSheet(mc, linkages[i]);
+			var anim:Dictionary;
+			if(asset is MovieClip) {
+				var linkages:Vector.<String> = asset.loaderInfo.applicationDomain.getQualifiedDefinitionNames();
+				var i:int;
+				var ClassReference:Class;
+				var mc:MovieClip;
+				for (i = 0; i < linkages.length; i++) {
+					
+					ClassReference = asset.loaderInfo.applicationDomain.getDefinition(linkages[i]) as Class;
+					if (getQualifiedSuperclassName(ClassReference)=="flash.display::MovieClip") {
+						mc = new ClassReference() as MovieClip;
+						buildSpriteSheet(mc, linkages[i]);
+					}
 				}
-				
+			} else if (asset is XML) {
+				anim = SpriteSheetParser.parse(asset, texture, SpriteSheetParser.XML_TYPE);
+			}
+			
+			var linkageName:String
+			if (anim) {
+				for (linkageName in anim) {
+					if (AssetParser.anims[linkageName]) {
+						trace(linkageName + "  has been overwriten");
+					}
+					AssetParser.anims[linkageName] = anim[linkageName];
+				}
 			}
 			
 		}
@@ -52,7 +68,6 @@ package chaos2D.util.data
 			if (anims[linkage]) {
 				throw "linkage has been added into animation, please change linkage in swf";
 			}
-			
 
 			var frameData:FrameDataObject;
 			
@@ -84,6 +99,8 @@ package chaos2D.util.data
 				frameData.offsetY = matrix.ty;
 				frameData.width = bound.width;
 				frameData.height = bound.height;
+				frameData.rawWidth = frameData.width;
+				frameData.rawHeight = frameData.height;
 				frameData.linkage = linkage;
 				frameData.bitmapData = baseBitmapData;
 				anims[linkage][i] = frameData;
@@ -152,6 +169,8 @@ package chaos2D.util.data
 				frameData.frameIndex = frameIndex;
 				frameData.width = mc.width;
 				frameData.height = mc.height;
+				frameData.rawWidth = frameData.width;
+				frameData.rawHeight = frameData.height;
 				anims[linkage][i] = frameData;
 			
 			}
