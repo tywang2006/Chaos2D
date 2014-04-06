@@ -24,71 +24,93 @@ package
 	 */
 	public class Game extends ChaoStage 
 	{
-		private var quads:Vector.<Quad> = new Vector.<Quad>();
-		private var images:Vector.<Image> = new Vector.<Image>();
-		private var vs:Vector.<Number> = new Vector.<Number>();
-		private var ds:Vector.<Number> = new Vector.<Number>();
-		private var acc:Number = 2;
-		private var direct:Number;
-		private var image:Image;
-		private var sprites:Vector.<DisplayObject> = new Vector.<DisplayObject>();
 		
-		[Embed(source="../texture/flower.png")]
-		private var Flower2:Class;
-		
-		[Embed(source = "../texture/bird.jpg")]
-		private var Bird:Class;
-		
-		
-		
-		private var tt:TextField;
+		private var _bkg:Image;
+		private var _superman:Sprite;
+		private var _grass:Sprite;
+		private var _buildings:Sprite;
+		private var _mountain:Sprite;
+		private var _planes:Vector.<Sprite>;
+		private var _speeds:Vector.<Number>;
+		private var _fires:Vector.<Sprite>;
 		
 		public function Game() 
 		{
 			super();
-			//new Quad(100,100,0xFFFFFFFF*Math.random())
-			//new Sprite("square")
+			_bkg = new Image(TextureCenter.instance.getTextureByID("BlueBkg"));
+			_superman = new Sprite("fly");
+			_superman.x = 400, _superman.y = 350;
 			
-			for (var i:int = 0; i < 1000; i++)
-			{
-				//tt = new TextField(100, 20, String(Math.random() * 999999), "Verdana", 10 * Math.random()+10, 0xFFFFFFFF*Math.random());
-				//var sprite:DisplayObject = (Math.random() > 0.9)?new Quad(100, 100, 0xFFFFFFFF * Math.random()):(Math.random() > 0.8)?new Sprite("square"):new Image(tt.texture);
-				var sprite:DisplayObject = new Sprite("fly");
-				//sprite.blendMode = BlendMode.SCREEN;
-				//sprite.color = 0xFFFFFFFF*Math.random();
-				addChild(sprite);
-				sprite.x = 1024 * 0.4;
-				sprite.y = 600 * 0.5;
-				sprite.registerPoint = new Point(0.5, 0.5);
-				//sprite.scaleX = sprite.scaleY = 3*(Math.random() - 0.5);
-				sprites.push(sprite);
-				vs.push((Math.random() - 0.5) * 100);
-				ds.push(Math.random())
+			_grass = new Sprite("bgLayer4");
+			_grass.y = 650;
+			
+			_buildings = new Sprite("bgLayer3");
+			_buildings.y = 500;
+			
+			_mountain = new Sprite("bgLayer2");
+			_mountain.y = 450;
+			
+			addChild(_bkg);
+			addChild(_mountain);
+			addChild(_buildings);
+			addChild(_grass);
+			
+			
+			_planes = new Vector.<Sprite>();
+			_speeds = new Vector.<Number>();
+			_fires = new Vector.<Sprite>();
+			var i:int;
+			for (i= 0; i < 1000; i++) {
+				var p:Sprite = new Sprite("item" + int(int(Math.random() * 7) + 1));
+				_planes.push(p);
+				p.x = 1100 + 1024 * Math.random();
+				p.y = 600 * Math.random();
+				p.registerPoint = new Point(1, 1);
+				_speeds[i] = 2 + 5 * Math.random();
+				addChild(p);
 			}
 			
+			for (i = 0; i < 20; i++) {
+				var f:Sprite = new Sprite("Explosion");
+				_fires.push(f);
+				f.x = 1024 * Math.random();
+				f.y = 550 * Math.random();
+				f.scaleX = f.scaleY = Math.random();
+				f.color = Math.random() * 0xFFFFFF + 0xFF000000;
+				f.stop();
+				//addChild(f);
+			}
 			
+			addChild(_superman);
 			
+
 		}
 		
 		override public function render(customizeTexture:Texture = null, uv:VertexBuffer3D = null):void 
 		{
-			
-			for (var i:int = 0; i < sprites.length; i++) {
-				direct = Math.random();
-				if (direct > 0.4) {
-					sprites[i].x += vs[i];
-					if(sprites[i] is Quad)sprites[i].rotation++;
-				} else {
-					sprites[i].y += vs[i];
-					if(sprites[i] is Quad)sprites[i].rotation--;
+			var i:int;
+			var len:int = _planes.length;
+			for (i = 0; i < len; i++) {
+				_planes[i].x = _planes[i].x - _speeds[i];
+				_planes[i].rotation += _speeds[i];
+				if (_planes[i].x < -50) {
+					_planes[i].x = 1100;
+					_planes[i].y = 600 * Math.random();
 				}
-				if (sprites[i].x > 1200 || sprites[i].x < 0 || sprites[i].y<0 || sprites[i].y>600) 
-				{
-					vs[i] = -vs[i];
-				}
-				//sprites[i].alpha = Math.random();
 			}
-			
+			len = _fires.length;
+			for (i = 0; i < len; i++) {
+				if (_fires[i].currentFrame == _fires[i].totalFrames) {
+					_fires[i].x = 1024 * Math.random();
+					_fires[i].y = 550 * Math.random();
+					_fires[i].color = Math.random() * 0xFFFFFF + 0xFF000000;
+					_fires[i].scaleX = _fires[i].scaleY = Math.random();
+				}
+				if (_fires[i].parent == null && Math.random() > 0.8) {
+					_fires[i].play();
+					addChild(_fires[i]);
+				}
+			}
 			super.render();
 
 		}

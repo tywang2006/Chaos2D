@@ -7,7 +7,7 @@
     <movie path="bin\Chaos2D.swf" />
     <movie fps="60" />
     <movie width="1024" />
-    <movie height="697" />
+    <movie height="768" />
     <movie version="11" />
     <movie minorVersion="9" />
     <movie platform="Flash Player" />

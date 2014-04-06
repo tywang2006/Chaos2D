@@ -84,9 +84,7 @@ package chaos2D.util
 				xml.fps = "FPS: " + fps + " / " + stage.frameRate;
 				xml.mem = "MEM: " + mem;
 				xml.memMax = "MAX: " + mem_max;
-				xml.vram = "VRAM: " + (vram * 0.000000954).toFixed(3)
-				xml.drw = "DRW: " + drw;
-				xml.tri = "TRI: " + tri;
+				xml.name = "  Chaos2D"
 				//
 				fps = 0;
 			}

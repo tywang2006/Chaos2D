@@ -47,6 +47,11 @@ package chaos2D.display
 			_stopped = true;
 		}
 		
+		public function play():void
+		{
+			_stopped = false;
+		}
+		
 		public function gotoAndStop(frame:int):void
 		{
 			_stopped = true;
@@ -91,12 +96,17 @@ package chaos2D.display
 		
 		public function get currentFrame():int 
 		{
-			return _currentFrameData.frameIndex;
+			return _currentFrame;
 		}
 		
 		public function get currentLabel():String
 		{
 			return _currentFrameData.label;
+		}
+		
+		public function get totalFrames():int 
+		{
+			return _totalFrames;
 		}
 		
 		public function get image():Image 

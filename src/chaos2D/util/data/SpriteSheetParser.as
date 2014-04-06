@@ -74,6 +74,8 @@ package chaos2D.util.data
 				frame.height = Number(data.SubTexture[i].@frameHeight);
 				frame.rawWidth = Number(data.SubTexture[i].@width);
 				frame.rawHeight = Number(data.SubTexture[i].@height);
+				frame.offsetX = -Number(data.SubTexture[i].@frameX);
+				frame.offsetY = -Number(data.SubTexture[i].@frameY);
 				if (frame.width == 0) frame.width = frame.rawWidth;
 				if (frame.height == 0) frame.height = frame.rawWidth;
 

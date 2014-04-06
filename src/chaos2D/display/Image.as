@@ -1,6 +1,7 @@
 package chaos2D.display 
 {
 	import chaos2D.ChaosEngine;
+	import chaos2D.core.Context2D;
 	import chaos2D.render.ImageRender;
 	import chaos2D.render.QuadRender;
 	import chaos2D.render.RenderBase;
@@ -15,8 +16,9 @@ package chaos2D.display
 		private var _render:RenderBase;
 		private var _programName:String;
 		private var _texture:Texture;
+		private var _uvBuffer:VertexBuffer3D;
 		
-		public function Image(texture:Texture) 
+		public function Image(texture:Texture, renderX:Number = NaN, renderY:Number = NaN, renderWidth:Number = -1, renderHeight:Number = -1) 
 		{
 			if (texture) {
 				super();
@@ -24,6 +26,16 @@ package chaos2D.display
 				_width = texture.width;
 				_height = texture.height;
 				_isDirty = true;
+				
+				if (renderWidth > 0 && renderHeight > 0 &&!isNaN(renderX) && !isNaN(renderY)) {
+					var uv:Vector.<Number> = Vector.<Number>([
+												renderX/_texture.width, renderY/_texture.height,
+												(renderX + renderWidth)/_texture.width, renderY/_texture.height,
+												(renderX + renderWidth)/_texture.width, (renderY + renderHeight)/_texture.height,
+												renderX/_texture.width, (renderY + renderHeight)/_texture.height
+										  ]);
+					_uvBuffer = ChaosEngine.context.getVertexBufferByUV(uv, _texture.base);
+				}
 			} else {
 				throw ArgumentError("Image: texture can't be NULL!");
 			}
@@ -41,6 +53,7 @@ package chaos2D.display
 			ChaosEngine.context.setProgram(_programName);
 			ChaosEngine.context.setAlphaBlend(BlendMode.getBlendFactors(this.blendMode));
 			if (!customizeTexture && !uv) ChaosEngine.context.setVertexBufferForTexture(_texture.base);
+			else if(_uvBuffer) ChaosEngine.context.setCustomizeVertexBufferForTexture(_uvBuffer, _texture.base);
 			else ChaosEngine.context.setCustomizeVertexBufferForTexture(uv, customizeTexture.base);
 			super.render();
 			ChaosEngine.context.clearBufferForImage();

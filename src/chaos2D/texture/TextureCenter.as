@@ -1,8 +1,10 @@
 package chaos2D.texture 
 {
 	import chaos2D.ChaosEngine;
+	import chaos2D.util.getNextPowerOfTwo;
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
+	import flash.display.StageQuality;
 	import flash.utils.Dictionary;
 	/**
 	 * ...
@@ -30,6 +32,7 @@ package chaos2D.texture
 			if (_assets[id]) {
 				throw "id has been taken for texture";
 			}
+			data = updatePower2BitmapData(data);
 			_assets[id] = ChaosEngine.context.createTexture(data, mipMapping);
 			Texture(_assets[id]).uploadData();
 			return _assets[id];
@@ -40,7 +43,8 @@ package chaos2D.texture
 			if (_assets[id]) {
 				throw "id has been taken for texture";
 			}
-			_assets[id] = ChaosEngine.context.createTexture(data, mipMapping);
+			var bitmapData:BitmapData = updatePower2BitmapData(data.bitmapData);
+			_assets[id] = ChaosEngine.context.createTexture(bitmapData, mipMapping);
 			Texture(_assets[id]).uploadData();
 			return _assets[id];
 		}
@@ -64,6 +68,22 @@ package chaos2D.texture
 				new TextureCenter();
 			}
 			return _instance;
+		}
+		
+		public static function updatePower2BitmapData(data:BitmapData):BitmapData
+		{
+			var w:Number = getNextPowerOfTwo(data.width);
+			var h:Number = getNextPowerOfTwo(data.height);
+			var newData:BitmapData = new BitmapData(w, h, true, 0x0);
+			var drawWithQualityFunc:Function = "drawWithQuality" in newData?newData["drawWithQuality"]:null;
+			
+			if (drawWithQualityFunc is Function) {
+				drawWithQualityFunc.call(data, data, null, null, null, null, false, StageQuality.MEDIUM);
+			} else {
+				newData.draw(data, null);
+			}
+			
+			return newData;
 		}
 		
 	}
