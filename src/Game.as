@@ -70,7 +70,7 @@ package
 				addChild(p);
 			}
 			
-			for (i = 0; i < 20; i++) {
+			for (i = 0; i < 50; i++) {
 				var f:Sprite = new Sprite("Explosion");
 				_fires.push(f);
 				f.x = 1024 * Math.random();
