@@ -24,6 +24,7 @@ package chaos2D.util.data
 		public var fit:Object;
 		public var uv:Vector.<Number>;
 		public var uvBuffer:VertexBuffer3D;
+		public var spriteSheetDetail:Object;
 		
 		public function FrameDataObject() 
 		{

@@ -86,6 +86,7 @@ package chaos2D.util.data
 												Number(data.SubTexture[i].@x)/_texture.width, (Number(data.SubTexture[i].@y) + Number(data.SubTexture[i].@height))/_texture.height
 										  ]);
 				
+				frame.spriteSheetDetail = { x:Number(data.SubTexture[i].@x), y:Number(data.SubTexture[i].@y), width:Number(data.SubTexture[i].@width), height:Number(data.SubTexture[i].@height)};						  
 				frame.uvBuffer = ChaosEngine.context.getVertexBufferByUV(frame.uv, _texture.base);
 				if (_anim[animName]) {
 					frames = _anim[animName];

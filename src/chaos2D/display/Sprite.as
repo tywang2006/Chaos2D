@@ -15,15 +15,15 @@ package chaos2D.display
 	 */
 	public class Sprite extends DisplayObjectContainer 
 	{
-		private var _render:RenderBase;
-		private var _programName:String;
-		private var _anim:Vector.<FrameDataObject>;
-		private var _currentFrame:int;
-		private var _currentFrameData:FrameDataObject;
-		private var _stopped:Boolean;
-		private var _totalFrames:int;
-		private var _image:Image;
-		private var _texture:Texture;
+		protected var _render:RenderBase;
+		protected var _programName:String;
+		protected var _anim:Vector.<FrameDataObject>;
+		protected var _currentFrame:int;
+		protected var _currentFrameData:FrameDataObject;
+		protected var _stopped:Boolean;
+		protected var _totalFrames:int;
+		protected var _image:Image;
+		protected var _texture:Texture;
 		
 		public function Sprite(animName:String) 
 		{

@@ -17,6 +17,7 @@ package
 	import flash.display3D.VertexBuffer3D;
 	import flash.geom.Point;
 	import flash.utils.getTimer;
+	import game.display.Scroller;
 	
 	/**
 	 * ...
@@ -37,19 +38,18 @@ package
 		public function Game() 
 		{
 			super();
-			_bkg = new Image(TextureCenter.instance.getTextureByID("BlueBkg"));
+			_bkg = new Image(TextureCenter.instance.getTextureByID("BlueBkg"),0,0,1024,768);
 			_superman = new Sprite("fly");
 			_superman.x = 400, _superman.y = 350;
 			
-			_grass = new Sprite("bgLayer4");
+			_grass = new Scroller("bgLayer4",200);
 			_grass.y = 650;
 			
-			_buildings = new Sprite("bgLayer3");
+			_buildings = new Scroller("bgLayer3",100);
 			_buildings.y = 500;
 			
-			_mountain = new Sprite("bgLayer2");
+			_mountain = new Scroller("bgLayer2", 300);
 			_mountain.y = 450;
-			
 			addChild(_bkg);
 			addChild(_mountain);
 			addChild(_buildings);
@@ -60,12 +60,12 @@ package
 			_speeds = new Vector.<Number>();
 			_fires = new Vector.<Sprite>();
 			var i:int;
-			for (i= 0; i < 1000; i++) {
+			for (i= 0; i < 800; i++) {
 				var p:Sprite = new Sprite("item" + int(int(Math.random() * 7) + 1));
 				_planes.push(p);
 				p.x = 1100 + 1024 * Math.random();
-				p.y = 600 * Math.random();
-				p.registerPoint = new Point(1, 1);
+				p.y = 550 * Math.random();
+				p.registerPoint = new Point(0.5, 0.5);
 				_speeds[i] = 2 + 5 * Math.random();
 				addChild(p);
 			}
@@ -76,7 +76,7 @@ package
 				f.x = 1024 * Math.random();
 				f.y = 550 * Math.random();
 				f.scaleX = f.scaleY = Math.random();
-				f.color = Math.random() * 0xFFFFFF + 0xFF000000;
+				f.color = Math.random() * 0x00FFFFFF + 0xFF000000;
 				f.stop();
 				//addChild(f);
 			}
@@ -103,7 +103,7 @@ package
 				if (_fires[i].currentFrame == _fires[i].totalFrames) {
 					_fires[i].x = 1024 * Math.random();
 					_fires[i].y = 550 * Math.random();
-					_fires[i].color = Math.random() * 0xFFFFFF + 0xFF000000;
+					_fires[i].color = Math.random() * 0x00FFFFFF + 0xFF000000;
 					_fires[i].scaleX = _fires[i].scaleY = Math.random();
 				}
 				if (_fires[i].parent == null && Math.random() > 0.8) {
