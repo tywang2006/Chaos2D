@@ -35,6 +35,8 @@ package chaos2D.display
 												renderX/_texture.width, (renderY + renderHeight)/_texture.height
 										  ]);
 					_uvBuffer = ChaosEngine.context.getVertexBufferByUV(uv, _texture.base);
+					_width = renderWidth;
+					_height = renderHeight;
 				}
 			} else {
 				throw ArgumentError("Image: texture can't be NULL!");
@@ -48,12 +50,11 @@ package chaos2D.display
 			if (_render == null) {
 				_render = new ImageRender();
 			}
-			
 			_programName = ImageRender(_render).generateProgramName(this.color >= 0, false);
 			ChaosEngine.context.setProgram(_programName);
 			ChaosEngine.context.setAlphaBlend(BlendMode.getBlendFactors(this.blendMode));
-			if (!customizeTexture && !uv) ChaosEngine.context.setVertexBufferForTexture(_texture.base);
-			else if(_uvBuffer) ChaosEngine.context.setCustomizeVertexBufferForTexture(_uvBuffer, _texture.base);
+			if(_uvBuffer) ChaosEngine.context.setCustomizeVertexBufferForTexture(_uvBuffer, _texture.base);
+			else if (!customizeTexture && !uv) ChaosEngine.context.setVertexBufferForTexture(_texture.base); 
 			else ChaosEngine.context.setCustomizeVertexBufferForTexture(uv, customizeTexture.base);
 			super.render();
 			ChaosEngine.context.clearBufferForImage();

@@ -38,7 +38,9 @@ package
 		public function Game() 
 		{
 			super();
-			_bkg = new Image(TextureCenter.instance.getTextureByID("BlueBkg"),0,0,1024,768);
+			_bkg = new Image(TextureCenter.instance.getTextureByID("BlueBkg"), 0, 0, 1024, 768);
+			addChild(_bkg);
+			
 			_superman = new Sprite("fly");
 			_superman.x = 400, _superman.y = 350;
 			
@@ -50,7 +52,7 @@ package
 			
 			_mountain = new Scroller("bgLayer2", 300);
 			_mountain.y = 450;
-			addChild(_bkg);
+			
 			addChild(_mountain);
 			addChild(_buildings);
 			addChild(_grass);
@@ -88,6 +90,7 @@ package
 		
 		override public function render(customizeTexture:Texture = null, uv:VertexBuffer3D = null):void 
 		{
+			
 			var i:int;
 			var len:int = _planes.length;
 			for (i = 0; i < len; i++) {
@@ -111,6 +114,7 @@ package
 					addChild(_fires[i]);
 				}
 			}
+			
 			super.render();
 
 		}

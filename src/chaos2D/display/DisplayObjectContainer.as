@@ -3,6 +3,8 @@ package chaos2D.display
 	import chaos2D.ChaosEngine;
 	import chaos2D.texture.Texture;
 	import flash.display3D.VertexBuffer3D;
+	import flash.geom.Matrix3D;
+	import flash.geom.Vector3D;
 	/**
 	 * ...
 	 * @author Chao
@@ -28,16 +30,6 @@ package chaos2D.display
 			}
 		}
 		
-		override public function get width():Number 
-		{
-			return super.width;
-		}
-		
-		override public function set width(value:Number):void 
-		{
-			super.width = value;
-		}
-		
 		public function getChildAt(index:int):DisplayObject 
 		{
 			if (index > _numChildren) throw "index is out of number of children";
@@ -49,7 +41,6 @@ package chaos2D.display
 			_children.push(child);
 			_numChildren++;
 			child.setParent(this);
-			//updateWidthHeight();
 			return child;
 		}
 		
@@ -58,36 +49,80 @@ package chaos2D.display
 			var index:int = _children.indexOf(child);
 			if (index > -1) {
 				child.setParent(null);
-				//updateWidthHeight();
 				return _children.splice(index, 1)[0];
 			}
 			return null;
+		}
+		
+		override protected function updateMatrix3D():void 
+		{
+			if (_parent) {
+				if (_matrix3D == null) _matrix3D = new Matrix3D();
+				_matrix3D.identity();
+				_matrix3D.appendTranslation(-_registerPoint.x, -_registerPoint.y, 0);
+				_matrix3D.appendScale(this.scaleX, this.scaleY, 1);
+				_matrix3D.appendRotation(_rotation, Vector3D.Z_AXIS);
+				_matrix3D.appendTranslation(_x, _y, 0);
+				_matrix3D.appendTranslation(_registerPoint.x, _registerPoint.y, 0);
+				_matrix3D.append(_parent.matrix3D);
+				_isDirty = false;
+			} else {
+				_matrix3D = null;
+			}
+		}
+		
+		override public function get height():Number 
+		{
+			if (_children.length == 0) return 0;
+			var top:Number = 0;
+			var bottom:Number = 0;
+			var i:int;
+			var len:int = this.numChildren;
+			var tmV:Number;
+			for (i = 0; i < len; i++) {
+				tmV = _children[i].y + _children[i].height;
+				top = (top < _children[i].y)?top:_children[i].y;
+				bottom = (bottom > tmV)?bottom:tmV;
+			}
+			
+			return (bottom - top) * scaleY;
+		}
+		
+		override public function set height(value:Number):void 
+		{
+			var tmV:Number = this.height;
+			if (tmV == value) return;
+			_scaleY = value / (tmV / _scaleY);
+		}
+		
+		override public function get width():Number 
+		{
+			if (_children.length == 0) return 0;
+			var left:Number = 0;
+			var right:Number = 0;
+			var i:int;
+			var len:int = this.numChildren;
+			var tmV:Number;
+			for (i = 0; i < len; i++) {
+				tmV = _children[i].x + _children[i].width;
+				left = (left < _children[i].x)?left:_children[i].x;
+				right = (right > tmV)?right:tmV;
+			}
+			
+			return (right - left) * scaleX;
+		}
+		
+		override public function set width(value:Number):void 
+		{
+			var tmV:Number = this.width;
+			if (tmV == value) return;
+			_scaleX = value / (tmV / _scaleX);
 		}
 		
 		public function get numChildren():int 
 		{
 			return _numChildren;
 		}
-		/*
-		public function updateWidthHeight():void
-		{
-			var i:int;
-			var child1:DisplayObject;
-			var child2:DisplayObject;
-			if (_numChildren == 1) {
-				child1 = getChildAt(0);
-				_width = child1.width * (1 - _registerPoint.x) + child1.x;
-				_height = child1.height * (1 - _registerPoint.y) + child1.y;
-				return;
-			}
-			for (i = 0; i < _numChildren - 1; i++) {
-				child1 = getChildAt(i);
-				child2 = getChildAt(i+1);
-				_width = Math.max(child1.width * (1-_registerPoint.x) + child1.x, child2.width * (1-_registerPoint.x) + child2.x);
-				_height = Math.max(child1.height * (1-_registerPoint.y) + child1.y, child2.height * (1-_registerPoint.y) + child2.y);
-			}
-		}
-		*/
 		
 	}
 

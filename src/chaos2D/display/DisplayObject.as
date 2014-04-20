@@ -69,7 +69,7 @@ package chaos2D.display
 		
 		public function render(customizeTexture:Texture = null, uv:VertexBuffer3D = null):void
 		{
-			if (_parent && this.width>0 && this.height>0) {
+			if (_parent && this.width > 0 && this.height > 0) {
 				var context:Context2D = ChaosEngine.context;
 				if (this.color>=0) context.setColorConstant(this.color);
 				context.setAlphaBuffer(this.alpha * _parent.alpha);
@@ -78,7 +78,7 @@ package chaos2D.display
 			}
 		}
 		
-		private function updateMatrix3D():void
+		protected function updateMatrix3D():void
 		{
 			if (_parent) {
 				if (_matrix3D == null) _matrix3D = new Matrix3D();
