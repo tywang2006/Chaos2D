@@ -4,6 +4,8 @@ package chaos2D.display
 	import chaos2D.core.Context2D;
 	import chaos2D.events.EventDispatcher;
 	import chaos2D.texture.Texture;
+	import chaos2D.util.MatrixUtil;
+	import com.adobe.utils.PerspectiveMatrix3D;
 	import flash.display.Stage;
 	import flash.display3D.VertexBuffer3D;
 	import flash.geom.Matrix;
@@ -35,6 +37,10 @@ package chaos2D.display
 		protected var _color:Number = -1;
 		protected var _blendMode:String = BlendMode.AUTO;
 		
+		private static var _ancestors:Vector.<DisplayObject> = new <DisplayObject>[];
+        private static var _helperRect:Rectangle = new Rectangle();
+        private static var _helperMatrix:Matrix  = new Matrix();
+		
 		public function DisplayObject() 
 		{
 			_y = _x = 0;
@@ -61,6 +67,58 @@ package chaos2D.display
 				return new Rectangle(left, right, msx * tmsx, msy * tmsy);
 			}
 			return null;
+		}
+		
+		public function getTransformationMatrix(targetSpace:DisplayObject, resultMatrix:Matrix = null):Matrix
+		{
+			var commonParent:DisplayObject;
+			var currentObject:DisplayObject;
+			if (resultMatrix) resultMatrix.identity();
+			else resultMatrix = new Matrix();
+			
+			if (targetSpace == this) return resultMatrix;
+			else if (targetSpace == _parent || (targetSpace == null && _parent == null)) {
+				resultMatrix = currentObject.matrix;
+				return resultMatrix;
+			} else if (targetSpace == null || targetSpace == base) {
+				currentObject = this;
+				while (currentObject != targetSpace) {
+					resultMatrix.concat(currentObject.matrix);
+					currentObject = currentObject.parent;
+				}
+				
+				return resultMatrix;
+			} else if (currentObject.parent == this) {
+				targetSpace.getTransformationMatrix(this, resultMatrix);
+				resultMatrix.invert();
+				return resultMatrix;
+			}
+			
+			commonParent = null;
+			currentObject = this;
+			while (currentObject) {
+				_ancestors[_ancestors.length] = currentObject;
+				currentObject = currentObject.parent;
+			}
+			
+			currentObject = targetSpace;
+			while (currentObject && _ancestors.indexOf(currentObject) == -1) {
+				currentObject = currentObject.parent;
+			}
+			_ancestors.length = 0;
+			if (currentObject) commonParent = currentObject;
+			else throw new ArgumentError("Object not connected to target");
+			
+			currentObject = this;
+			while (currentObject != commonParent) {
+				resultMatrix.concat(currentObject.matrix);
+				currentObject = currentObject.parent;
+			}
+			
+			_helperMatrix.invert();
+			resultMatrix.concat(_helperMatrix);
+			
+			return resultMatrix;
 		}
 		
 		public function setParent(parent:DisplayObjectContainer):void
@@ -272,6 +330,13 @@ package chaos2D.display
 			return null;
 			
 		}
+		
+		public function get base():DisplayObject
+        {
+            var currentObject:DisplayObject = this;
+            while (currentObject.parent) currentObject = currentObject.parent;
+            return currentObject;
+        }
 		
 		
 	}
