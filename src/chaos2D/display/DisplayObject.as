@@ -2,6 +2,7 @@ package chaos2D.display
 {
 	import chaos2D.ChaosEngine;
 	import chaos2D.core.Context2D;
+	import chaos2D.events.EventDispatcher;
 	import chaos2D.texture.Texture;
 	import flash.display.Stage;
 	import flash.display3D.VertexBuffer3D;
@@ -14,7 +15,7 @@ package chaos2D.display
 	 * ...
 	 * @author Chao
 	 */
-	public class DisplayObject 
+	public class DisplayObject extends EventDispatcher
 	{
 		protected var _x:Number;
 		protected var _y:Number;

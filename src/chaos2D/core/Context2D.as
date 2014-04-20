@@ -63,7 +63,9 @@ package chaos2D.core
 		
 		public function setAlphaBuffer(alpha:Number):void
 		{
-			_context3D.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 1, Vector.<Number>([alpha,alpha,alpha,alpha]));
+			var alphas:Vector.<Number> = new Vector.<Number>(4);
+			alphas[0] = alphas[1] = alphas[2] = alphas[3] = alpha;
+			_context3D.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 1, alphas);
 		}
 		
 		public function setColorConstant(color:Number):void

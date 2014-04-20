@@ -34,17 +34,18 @@ package chaos2D
 		
 		private function requestContext2D():void 
 		{
-			_stage3D.addEventListener(Event.CONTEXT3D_CREATE, onContext3DCreated);
+			_stage3D.addEventListener(Event.CONTEXT3D_CREATE, onContext3DCreated, false, 0, true);
 			_stage3D.requestContext3D();
 		}
 		
 		private function onContext3DCreated(e:Event):void 
 		{
+			_stage3D.removeEventListener(Event.CONTEXT3D_CREATE, onContext3DCreated);
 			_stage3D.context3D.configureBackBuffer(_stage.stageWidth, _stage.stageHeight, 0, false);
 			
 			_context = new Context2D(_stage3D.context3D);
 			_context.setProjection(_stage.stageWidth, _stage.stageHeight);
-			_stage.addEventListener(Event.ENTER_FRAME, onEnterFrame);
+			_stage.addEventListener(Event.ENTER_FRAME, onEnterFrame, false, 0, true);
 			dispatchEvent(new Event(Event.INIT));
 			
 			_root = new _rootClass();
