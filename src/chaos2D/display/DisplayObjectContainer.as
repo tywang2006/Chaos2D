@@ -132,7 +132,7 @@ package chaos2D.display
 			if(helpMatrix3D) {
 				var i:int;
 				for (i = 0; i < _numChildren; i++) {
-					points = points.concat(_children[i].getCornerPoints(_children[i].matrix3D));
+					points = points.concat(_children[i].getCornerPoints(_children[i].matrix3D));//get global points
 				}
 			}
 			return points;

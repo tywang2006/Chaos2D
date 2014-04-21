@@ -41,9 +41,9 @@ package chaos2D.display
 		protected var _realWidth:Number = 0;
 		protected var _realHeight:Number = 0;
 		
-		private static var _ancestors:Vector.<DisplayObject> = new <DisplayObject>[];
-        private static var _helperRect:Rectangle = new Rectangle();
-        private static var _helperMatrix:Matrix  = new Matrix();
+		protected static var _ancestors:Vector.<DisplayObject> = new <DisplayObject>[];
+        protected static var _helperRect:Rectangle = new Rectangle();
+        protected static var _helperMatrix:Matrix  = new Matrix();
 		
 		public function DisplayObject() 
 		{
@@ -71,7 +71,7 @@ package chaos2D.display
 			
 			if (targetSpace == this) return resultMatrix;
 			else if (targetSpace == _parent || (targetSpace == null && _parent == null)) {
-				resultMatrix = currentObject.matrix;
+				resultMatrix.copyFrom(this.matrix);
 				return resultMatrix;
 			} else if (targetSpace == null || targetSpace == base) {
 				currentObject = this;
@@ -204,10 +204,17 @@ package chaos2D.display
 			}
 		}
 		
-		public function set width(value:Number):void 
+		public function set nativeWidth(value:Number):void 
 		{
 			if (_width == value) return;
 			_scaleX = value / _width;
+			_isDirty = true;
+		}
+		
+		public function set nativeHeight(value:Number):void
+		{
+			if (_height == value) return;
+			_scaleY = value / _height;
 			_isDirty = true;
 		}
 		
@@ -224,13 +231,6 @@ package chaos2D.display
 			}
 			_realHeight = bottom - top;
 			return _realHeight;
-		}
-		
-		public function set height(value:Number):void 
-		{
-			if (_height == value) return;
-			_scaleY = value / _height;
-			_isDirty = true;
 		}
 		
 		public function get scaleX():Number 
@@ -351,7 +351,7 @@ package chaos2D.display
 			if(m3d) {
 				return MatrixUtil.convertTo2D(m3d);
 			}
-			return null;
+			return new Matrix();
 			
 		}
 		
@@ -361,6 +361,22 @@ package chaos2D.display
             while (currentObject.parent) currentObject = currentObject.parent;
             return currentObject;
         }
+		
+		public function set width(value:Number):void 
+		{
+			var tmV:Number = this.width;
+			if (tmV == value) return;
+			_scaleX = value / (tmV / _scaleX);
+			_isDirty = true;
+		}
+		
+		public function set height(value:Number):void 
+		{
+			var tmV:Number = this.height;
+			if (tmV == value) return;
+			_scaleY = value / (tmV / _scaleY);
+			_isDirty = true;
+		}
 		
 		
 	}

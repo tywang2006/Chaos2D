@@ -44,13 +44,13 @@ package
 			_superman = new Sprite("fly");
 			_superman.x = 400, _superman.y = 350;
 			
-			_grass = new Scroller("bgLayer4",200);
+			_grass = new Scroller("bgLayer4",400);
 			_grass.y = 650;
 			
-			_buildings = new Scroller("bgLayer3",100);
+			_buildings = new Scroller("bgLayer3",200);
 			_buildings.y = 500;
 			
-			_mountain = new Scroller("bgLayer2", 300);
+			_mountain = new Scroller("bgLayer2", 600);
 			_mountain.y = 450;
 			
 			addChild(_mountain);
@@ -62,7 +62,7 @@ package
 			_speeds = new Vector.<Number>();
 			_fires = new Vector.<Sprite>();
 			var i:int;
-			for (i= 0; i < 100; i++) {
+			for (i= 0; i < 1; i++) {
 				var p:Sprite = new Sprite("item" + int(int(Math.random() * 7) + 1));
 				_planes.push(p);
 				p.x = 1100 + 1024 * Math.random();
@@ -99,6 +99,7 @@ package
 					_planes[i].x = 1100;
 					_planes[i].y = 600 * Math.random();
 				}
+				if(_planes[i].matrix)trace(_planes[i].getBounds(this))
 			}
 			len = _fires.length;
 			for (i = 0; i < len; i++) {

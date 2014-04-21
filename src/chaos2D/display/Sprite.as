@@ -72,8 +72,8 @@ package chaos2D.display
 		{
 			if (!_parent || !_visible) return;
 			_currentFrameData = _anim[_currentFrame-1];
-			_image.width = _currentFrameData.rawWidth;
-			_image.height = _currentFrameData.rawHeight;
+			_image.nativeWidth = _currentFrameData.rawWidth;
+			_image.nativeHeight = _currentFrameData.rawHeight;
 			_image.x = _currentFrameData.offsetX;
 			_image.y = _currentFrameData.offsetY;
 			ChaosEngine.context.setMatrix3D(this.matrix3D);

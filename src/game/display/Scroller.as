@@ -28,8 +28,8 @@ package game.display
 		
 		override public function render(customizeTexture:Texture = null, uv:VertexBuffer3D = null):void 
 		{
-			_image.width = _currentFrameData.rawWidth*(_totalFrames-_currentFrame)/_totalFrames;
-			_image.height = _currentFrameData.rawHeight;
+			_image.nativeWidth = _currentFrameData.rawWidth*(_totalFrames-_currentFrame)/_totalFrames;
+			_image.nativeHeight = _currentFrameData.rawHeight;
 			_image.x = _currentFrameData.rawWidth*_currentFrame/_totalFrames
 			ChaosEngine.context.setMatrix3D(this.matrix3D);
 			
@@ -47,7 +47,7 @@ package game.display
 			_uvBuffer = ChaosEngine.context.getVertexBufferByUV(uvVec, _texture.base);
 			
 			_image.x = 0;
-			_image.width = _currentFrameData.rawWidth*_currentFrame/_totalFrames;
+			_image.nativeWidth = _currentFrameData.rawWidth*_currentFrame/_totalFrames;
 			_image.render(_texture, _uvBuffer);
 			
 			if (!_stopped) {
