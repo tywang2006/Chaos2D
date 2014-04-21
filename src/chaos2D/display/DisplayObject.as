@@ -40,6 +40,7 @@ package chaos2D.display
 		protected var _localMatrix:Matrix3D;
 		protected var _realWidth:Number = 0;
 		protected var _realHeight:Number = 0;
+		protected var _touchable:Boolean
 		
 		protected static var _ancestors:Vector.<DisplayObject> = new <DisplayObject>[];
         protected static var _helperRect:Rectangle = new Rectangle();
@@ -54,12 +55,34 @@ package chaos2D.display
 			_visible = true;
 			//_matrix3D = new Matrix3D();
 			_registerPoint = new Point(0, 0);// factor
+			_touchable = true;
 		}
 		
 		
 		public function getBounds(targetSpace:DisplayObject, resultRect:Rectangle = null):Rectangle
 		{
 			throw new AbstractMethodError();
+		}
+		
+		public function hitTest(localPoint:Point, forTouch:Boolean = false):DisplayObject
+		{
+			if (forTouch && (!_visible || !_touchable)) return null;
+			
+			if (getBounds(this, _helperRect).containsPoint(localPoint)) return this;
+			else return null;
+		}
+		
+		public function localToGlobal(localPoint:Point, resultPoint:Point = null):Point
+		{
+			getTransformationMatrix(base, _helperMatrix);
+			return MatrixUtil.transformCoords(_helperMatrix, localPoint.x, localPoint.y, _registerPoint);
+		}
+		
+		public function globalToLocal(globalPoint:Point, resultPoint:Point = null):Point
+		{
+			getTransformationMatrix(base, _helperMatrix);
+			_helperMatrix.invert();
+			return MatrixUtil.transformCoords(_helperMatrix, globalPoint.x, globalPoint.y, _registerPoint);
 		}
 		
 		public function getTransformationMatrix(targetSpace:DisplayObject, resultMatrix:Matrix = null):Matrix

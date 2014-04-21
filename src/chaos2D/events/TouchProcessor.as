@@ -42,8 +42,17 @@ package chaos2D.events
 			
 			_stage.addEventListener(KeyboardEvent.KEY_DOWN, onKey);
 			_stage.addEventListener(KeyboardEvent.KEY_UP, onKey);
+			monitorInterruptions(true);
 			
 		}
+		
+		public function dispose():void
+		{
+			monitorInterruptions(false);
+			_stage.removeEventListener(KeyboardEvent.KEY_DOWN, onKey);
+			_stage.removeEventListener(KeyboardEvent.KEY_UP, onKey);
+		}
+		
 		
 		private function monitorInterruptions(enabled:Boolean):void
 		{
@@ -68,9 +77,10 @@ package chaos2D.events
 				}
 				
 				processTouches(_currentTouches, _shiftDown, _ctrlDown);
-				_currentTouches.length = 0;
-				_queue.length = 0;
 			}
+			
+			_currentTouches.length = 0;
+			_queue.length = 0;
 		}
 		
 		protected function processTouches(touches:Vector.<Touch>, shiftDown:Boolean, ctrlDown:Boolean):void 
@@ -84,8 +94,18 @@ package chaos2D.events
 				}
 				if (t.phase == TouchPhase.HOVER || t.phase == TouchPhase.BEGAN) {
 					_helperPoint.setTo(t.globalX, t.globalY);
-					//t.target = _root.hit
+					t.target = _root.hitTest(_helperPoint, true);
 				}
+			}
+			
+			for each(var data:Object in _hoveringTouchData) {
+				if (data.touch.target != data.target) {
+					touchEvent.dispatch(data.bubbleChain);
+				}
+			}
+			
+			for each(t in touches) {
+				t.dispatchEvent(touchEvent);
 			}
 		}
 		
