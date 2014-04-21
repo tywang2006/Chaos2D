@@ -2,6 +2,7 @@ package chaos2D.display
 {
 	import chaos2D.ChaosEngine;
 	import chaos2D.core.Context2D;
+	import chaos2D.error.AbstractMethodError;
 	import chaos2D.events.EventDispatcher;
 	import chaos2D.texture.Texture;
 	import chaos2D.util.MatrixUtil;
@@ -36,6 +37,9 @@ package chaos2D.display
 		protected var _tinted:Boolean = false;
 		protected var _color:Number = -1;
 		protected var _blendMode:String = BlendMode.AUTO;
+		protected var _localMatrix:Matrix3D;
+		protected var _realWidth:Number = 0;
+		protected var _realHeight:Number = 0;
 		
 		private static var _ancestors:Vector.<DisplayObject> = new <DisplayObject>[];
         private static var _helperRect:Rectangle = new Rectangle();
@@ -52,21 +56,10 @@ package chaos2D.display
 			_registerPoint = new Point(0, 0);// factor
 		}
 		
-		public function getBound(targetCoordinateSpace:DisplayObject):Rectangle
+		
+		public function getBounds(targetSpace:DisplayObject, resultRect:Rectangle = null):Rectangle
 		{
-			var targetMatrix:Matrix = targetCoordinateSpace.matrix;
-			if (targetCoordinateSpace.parent && targetMatrix) {
-				var matrix:Matrix = this.matrix;
-				var msx:Number = matrix.a * Math.pow(matrix.a * matrix.a + matrix.b * matrix.b, 0.5) / Math.abs(matrix.a);
-				var msy:Number = matrix.d * Math.pow(matrix.c * matrix.c + matrix.d * matrix.d, 0.5) / Math.abs(matrix.d);
-				var tmsx:Number = targetMatrix.a * Math.pow(targetMatrix.a * targetMatrix.a + targetMatrix.b * targetMatrix.b, 0.5) / Math.abs(matrix.a);
-				var tmsy:Number = targetMatrix.d * Math.pow(targetMatrix.c * targetMatrix.c + targetMatrix.d * targetMatrix.d, 0.5) / Math.abs(targetMatrix.d);
-				var left:Number = (matrix.tx - targetMatrix.tx - _registerPoint.x * msx) * tmsx;
-				var right:Number = (matrix.ty - targetMatrix.ty - _registerPoint.y * msy) * tmsy;
-				
-				return new Rectangle(left, right, msx * tmsx, msy * tmsy);
-			}
-			return null;
+			throw new AbstractMethodError();
 		}
 		
 		public function getTransformationMatrix(targetSpace:DisplayObject, resultMatrix:Matrix = null):Matrix
@@ -128,7 +121,7 @@ package chaos2D.display
 		
 		public function render(customizeTexture:Texture = null, uv:VertexBuffer3D = null):void
 		{
-			if (_parent && this.width > 0 && this.height > 0) {
+			if (_parent && _width * _scaleX > 0 && _height * _scaleY > 0) {
 				var context:Context2D = ChaosEngine.context;
 				if (this.color>=0) context.setColorConstant(this.color);
 				context.setAlphaBuffer(this.alpha * _parent.alpha);
@@ -139,14 +132,15 @@ package chaos2D.display
 		
 		protected function updateMatrix3D():void
 		{
-			if (_parent) {
+			if (_parent && _width > 0 && _scaleX > 0 && _height > 0 && _scaleY > 0) {
 				if (_matrix3D == null) _matrix3D = new Matrix3D();
 				_matrix3D.identity();
 				_matrix3D.appendTranslation(-_registerPoint.x, -_registerPoint.y, 0);
-				_matrix3D.appendScale(this.width, this.height, 1);
+				_matrix3D.appendScale(_width * _scaleX, _height * _scaleY, 1);
 				_matrix3D.appendRotation(_rotation, Vector3D.Z_AXIS);
 				_matrix3D.appendTranslation(_x, _y, 0);
 				_matrix3D.appendTranslation(_registerPoint.x, _registerPoint.y, 0);
+				_localMatrix = _matrix3D.clone();
 				_matrix3D.append(_parent.matrix3D);
 				_isDirty = false;
 			} else {
@@ -163,7 +157,8 @@ package chaos2D.display
 		{
 			if (_x == value) return;
 			_x = value;
-			_isDirty = true;
+			updateMatrix3D();
+			//_isDirty = true;
 		}
 		
 		public function get y():Number 
@@ -174,13 +169,39 @@ package chaos2D.display
 		public function set y(value:Number):void 
 		{
 			if (_y == value) return;
+			updateMatrix3D();
 			_y = value;
-			_isDirty = true;
+			//_isDirty = true;
 		}
 		
 		public function get width():Number 
 		{
-			return _width * _scaleX;
+			var points:Vector.<Point> = getCornerPoints();
+			var i:int;
+			var len:int = points.length;
+			var left:Number = 0;
+			var right:Number = 0;
+			for (i = 0; i < len; i++) {
+				left = left < points[i].x?left:points[i].x;
+				right = right > points[i].x?right:points[i].x;
+			}
+			_realWidth = right - left;
+			return _realWidth;
+		}
+		
+		public function getCornerPoints(m3d:Matrix3D = null):Vector.<Point> 
+		{
+			var m:Matrix = m3d==null?this.matrix:MatrixUtil.convertTo2D(m3d);
+			if (m) {
+				var topLeft:Point = matrix.transformPoint(new Point(0, 0));
+				var topRight:Point = matrix.transformPoint(new Point(1, 0));
+				var bottomLeft:Point = matrix.transformPoint(new Point(0, 1));
+				var bottomRight:Point = matrix.transformPoint(new Point(1, 1));
+				return Vector.<Point>([topLeft, topRight, bottomRight, bottomLeft]);
+			} else {
+				var p:Point = new Point();
+				return Vector.<Point>([p,p,p,p]);
+			}
 		}
 		
 		public function set width(value:Number):void 
@@ -192,7 +213,17 @@ package chaos2D.display
 		
 		public function get height():Number 
 		{
-			return _height * _scaleY;
+			var points:Vector.<Point> = getCornerPoints();
+			var i:int;
+			var len:int = points.length;
+			var top:Number = 0;
+			var bottom:Number = 0;
+			for (i = 0; i < len; i++) {
+				top = top < points[i].y?top:points[i].y;
+				bottom = bottom > points[i].y?bottom:points[i].y;
+			}
+			_realHeight = bottom - top;
+			return _realHeight;
 		}
 		
 		public function set height(value:Number):void 
@@ -316,16 +347,9 @@ package chaos2D.display
 		
 		public function get matrix():Matrix
 		{
-			var m3d:Matrix3D = this.matrix3D;
+			var m3d:Matrix3D = _localMatrix;
 			if(m3d) {
-				var raw:Vector.<Number> = m3d.rawData;
-				var a:Number = raw[0];
-				var b:Number = raw[1];
-				var c:Number = raw[4];
-				var d:Number = raw[5];
-				var tx:Number = raw[12];
-				var ty:Number = raw[13];
-				return new Matrix(a, b, c, d, tx, ty);
+				return MatrixUtil.convertTo2D(m3d);
 			}
 			return null;
 			

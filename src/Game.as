@@ -62,7 +62,7 @@ package
 			_speeds = new Vector.<Number>();
 			_fires = new Vector.<Sprite>();
 			var i:int;
-			for (i= 0; i < 800; i++) {
+			for (i= 0; i < 100; i++) {
 				var p:Sprite = new Sprite("item" + int(int(Math.random() * 7) + 1));
 				_planes.push(p);
 				p.x = 1100 + 1024 * Math.random();
@@ -90,7 +90,6 @@ package
 		
 		override public function render(customizeTexture:Texture = null, uv:VertexBuffer3D = null):void 
 		{
-			
 			var i:int;
 			var len:int = _planes.length;
 			for (i = 0; i < len; i++) {

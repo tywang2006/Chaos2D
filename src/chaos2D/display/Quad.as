@@ -6,6 +6,7 @@ package chaos2D.display
 	import chaos2D.render.RenderBase;
 	import chaos2D.texture.Texture;
 	import flash.display3D.VertexBuffer3D;
+	import flash.geom.Rectangle;
 	/**
 	 * ...
 	 * @author Chao
@@ -21,6 +22,11 @@ package chaos2D.display
 			_width = width;
 			_height = height
 			_isDirty = true;
+		}
+		
+		override public function getBounds(targetSpace:DisplayObject, resultRect:Rectangle = null):Rectangle 
+		{
+			
 		}
 		
 		override public function render(customizeTexture:Texture = null, uv:VertexBuffer3D = null):void 
