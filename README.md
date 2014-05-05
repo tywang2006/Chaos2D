@@ -29,3 +29,6 @@ contining:
 5, deactivate
 6, easy to fit different size of screen (mobile)
 7, optimaztion.
+
+
+I won't update the version until i got another big project done. Then I will build a better 2D version for this engine. I can't tell what it is. However, once you see that, that must blow your mind. just keep claim.
